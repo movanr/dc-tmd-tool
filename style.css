@@ -1,0 +1,90 @@
+@media print {
+  .noPrint {
+    display:none;
+  }
+
+  #patientForm {
+    zoom:50%;
+  }
+
+  #examination {
+    width: 100% !important;
+    zoom: 100%;
+  }
+
+  .pagebreak {
+    clear: both;
+    page-break-after: always;
+  }
+}
+
+body {
+  overflow-y:scroll;
+}
+
+.invis {
+  display: none;
+}
+
+.examination-page-2{
+  display: none;
+}
+
+
+.symptom {
+    /* Hide all symptoms by default */
+    display: none;
+    /*padding-top: 15px;*/
+}
+
+.tab {
+    /* Hide all tabs by default: */
+    display: none;
+    /*padding-top: 15px;
+    padding-bottom: 15px;*/
+}
+
+.diagnosis-tab {
+  display: none;
+}
+
+.diagnosis-tab-anamnese {
+  display: none;
+}
+
+
+.custom-warning {
+  display:none;
+}
+
+.custom-info {
+  display: none;
+}
+
+#reception {
+  /*display: none;*/
+  margin: auto;
+  max-width: 27cm;
+  min-width: 8cm;
+}
+
+#patientForm {
+  display: none;
+  margin: auto;
+  max-width: 32cm;
+  min-width: 8cm;
+}
+
+#examination {
+  display: none;
+  margin: auto;
+  width: 32cm;
+}
+
+#diagnosis {
+  display: none;
+  margin: auto;
+  width: 34cm;
+}
+
+

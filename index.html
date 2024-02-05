@@ -1,0 +1,2276 @@
+<html>
+
+<head>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC/TMD-Untersuchung Prototyp</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <!-- docx lib for word documents -->
+  <script src="https://unpkg.com/docx@8.0.2/build/index.js"></script>
+
+  <!-- FileSaver lib for downloading files -->
+  <!--
+    Copyright 2016 Eli Grey.
+    Licensed under MIT (https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md)
+    -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js"></script>
+  <!-- bootstrap lib -->
+  <!-- 
+    Bootstrap v5.3.0 (https://getbootstrap.com/)
+    Copyright 2011-2021 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+    Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+    -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+
+<body>
+  <div class="noPrint">
+    <nav class="navbar navbar-expand-lg bg-body-secondary" id="navbar_top">
+      <div class="container-fluid">
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <!-- home -->
+          <ul class="navbar-nav me-auto" id="home-button">
+            <li class="nav-item">
+              <a class="navbar-brand" href="index.html">DC/TMD-Untersuchung Prototyp</a>
+            </li>
+          </ul>
+
+          <!-- navigation -->
+          <ul class="navbar-nav m-auto" id="page-navigation-buttons">
+            <li class="nav-item">
+              <button class="nav-link active" id="tab-button-1">Fragebogen</button>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" id="tab-button-1-arrow">&#x1F892;</a>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link disabled" id="tab-button-2">Untersuchung</button>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" id="tab-button-2-arrow">&#x1F892;</a>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link disabled" id="tab-button-3">Diagnose</button>
+            </li>
+          </ul>
+
+          <!-- inivisible item for alignment -->
+          <ul class="navbar-nav" id="navbar-space-right">
+          </ul>
+
+          <!-- file button -->
+          <ul class="navbar-nav ms-auto" id="navbar-dropdown1">
+            <li class="nav-item dropdown">
+              <button class="btn btn-tertiary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Datei
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <button type="button" class="dropdown-item d-flex align-items-center" id="print-button">
+                    Formular drucken
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="dropdown-item d-flex align-items-center" id="export-csv-button">
+                    Als CSV-Datei exportieren
+                  </button>
+                </li>
+
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav ms-auto" id="navbar-dropdown2" style="display: none;">
+            <li class="nav-item dropdown">
+              <button class="btn btn-tertiary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Datei
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <button type="button" class="dropdown-item d-flex align-items-center" id="generate-report-button"
+                    disabled>
+                    Arztbrief erstellen
+                  </button>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <!--<ul class="navbar-nav ms-auto">
+              <li class="nav-item dropdown">
+                <button class="btn btn-tertiary dropdown-toggle " type="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-circle-half"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+                  <li>
+                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+                      <i class="bi bi-sun-fill"></i>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+                      <i class="bi bi-moon-stars-fill"></i>
+                    </button>
+                  </li>
+                </ul>
+              </li>
+            </ul>-->
+        </div>
+      </div>
+    </nav>
+  </div>
+
+
+  <div class="noPrint">
+    <div class="container-fixed pt-5 pb-5" id="reception">
+      <form id="code-input-form">
+        <div class="form-group mb-3">
+          <label class="form-label" for="codeInput">Patienten Code eingeben</label><br>
+          <div class="row">
+            <div class="col">
+              <input class="form-control border border-secondary" type="text" id="codeInput" minlength="6"
+                maxlength="10" required>
+            </div>
+            <div class="col">
+              <button class="btn btn-primary" type="button" id="codeSubmit">Senden</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <p>oder</p>
+      <div class="container-fixed mb-4 mt-2">
+        <button class="btn btn-primary pt-2 pb-2" type="button" id="show-all-questions">
+          Fragen manuell beantworten
+        </button>
+      </div>
+
+
+      <div class="tab" id="get-record-failure">
+        Fehler beim senden des Codes. Bitte versuchen Sie es erneut.
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container-fixed pt-5" id="patientForm">
+    <!-- patient code display -->
+    <div class="container tab mt-3 mb-3" id="code-display">
+      <div class="row">
+        <div class="col-9">
+        </div>
+        <div class="col text-end">
+          <h5>Patienten Code</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-9">
+        </div>
+        <div class="col text-end">
+          <TEXT-TAG style="font-size:24px"><span id="code-display-field">CODENAME</span></TEXT-TAG>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4 text-center text-secondary summary-anamnesis" style="display: none;">
+      <h4>Resultate der Anamnese</h4>
+    </div>
+
+    <div class="container-fixed mb-3 summary-anamnesis-warning" style="display: none">
+      <div class="shadow-sm p-3 rounded text-center severe-patient-warning bg-danger-subtle">
+      </div>
+    </div>
+
+    <div class="container-fixed mb-5 summary-anamnesis" style="display: none">
+      <div class="container-fixed">
+        <div class="shadow-sm p-3 bg-info-subtle rounded text-center summary-anamnesis-info">
+        </div>
+      </div>
+    </div>
+
+    <!-- anamnesis submit button/ next button -->
+    <div class="container-fixed noPrint mx-0 px-0 mb-5 anamnesis-submit-button-div">
+      <div class="d-grid gap-2">
+        <button class="btn btn-primary anamnesis-submit-button" type="button">
+          <strong>Weiter zur Untersuchung</strong>
+        </button>
+      </div>
+    </div>
+
+    <!-- 1. FRAGEBOGEN -->
+    <div class="text-center text-secondary tab anamnese-headline mb-3" id="anam-headline-1">
+      <h4>Symptombezogener Fragebogen</h4>
+    </div>
+
+    <!-- Symptom 1 -->
+    <div class="symptom mb-3" name="Symptom1">
+      <b>SCHMERZEN</b>
+    </div>
+    <!-- QUESTION 1-->
+
+    <form class="tab mb-3" id="question1">
+      <div class="row">
+        <div class="col-9">
+          1. Hatten Sie jemals auf einer oder beiden Seiten Schmerzen im Kiefer,
+          im Schläfenbereich, im Ohr oder vor dem Ohr?
+        </div>
+        <div class="col self-align-end text-end">
+          <div class="form-check form-check-inline mb-3">
+            <input class="form-check-input border-secondary" type="radio" name="answer1" value="0" id="answer1_0">
+            <label class="form-check-label" for="answer1_0">Nein</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer1" value="1" id="answer1_1">
+            <label class="form-check-label" for="answer1_1">Ja</label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- QUESTION 2 -->
+    <form class="tab mb-3" id="question2">
+      <div class="row">
+        <div class="col-6">
+          2. Vor wie vielen Jahren oder Monaten hat Ihr Schmerz im
+          Kiefer, den Schläfen, im oder vor dem Ohr erstmals begonnen?
+        </div>
+        <div class="col">
+          <input class="form-control border-secondary" type="number" id="answer2_years" style="width: 5em;">
+        </div>
+        <label class="col col-form-label" for="answer2_years">Jahre</label>
+        <div class="col">
+          <input class="form-control border-secondary" type="number" id="answer2_months" style="width: 5em;">
+        </div>
+        <label class="col col-form-label" for="answer2_months">Monate</label>
+      </div>
+    </form>
+
+    <!-- QUESTION 3 -->
+    <form class="tab mb-3" id="question3">
+      <div class="row">
+        <div class="col-6">
+          3. Welche der folgenden Antworten beschreibt die Schmerzen im Kiefer, Schläfenbereich, im Ohr
+          oder vor dem Ohr auf beiden Seiten in den letzten 30 Tagen am besten?
+        </div>
+        <div class="col self-align-end">
+          <div class="form-check form-check-inline mb-3">
+            <input class="form-check-input border-secondary" type="radio" name="answer3" value="0" id="answer3_0">
+            <label class="form-check-label" for="answer3_0">Keine Schmerzen</label>
+          </div>
+          <div class="form-check form-check-inline mb-3">
+            <input class="form-check-input border-secondary" type="radio" name="answer3" value="1" id="answer3_1">
+            <label class="form-check-label" for="answer3_1">Schmerzen kommen und gehen</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer3" value="2" id="answer3_2">
+            <label class="form-check-label" for="answer3_2">Schmerzen sind immer vorhanden</label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- QUESTION 4 -->
+    <form class="tab mb-3" id="question4">
+      <p>4. Haben die folgenden Aktivitäten in den letzten 30 Tagen einen Schmerz
+        im Kiefer oder im Schläfenbereich, im Ohr oder vor dem Ohr, auf einer
+        oder beiden Seiten verändert (d. h. verbessert bzw. verschlechtert)?
+      </p>
+      <table class="table">
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Nein</th>
+          <th>Ja</th>
+        </tr>
+        <tr>
+          <td>A.</td>
+          <td><label class="form-check-label" for="answer4_A">Kauen von harter oder zäher Nahrung</label></td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer4_A" value="0" id="answer4_A_0">
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer4_A" value="1" id="answer4_A_1">
+          </td>
+        </tr>
+        <tr>
+          <td>B.</td>
+          <td>
+            <label class="form-check-label" for="answer4_B">
+              Öffnung des Mundes oder Bewegung des Kiefers nach vorn oder zur
+              Seite
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer4_B" value="0" id="answer4_B_0">
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer4_B" value="1" id="answer4_B_1">
+          </td>
+        </tr>
+        <tr>
+          <td>C.</td>
+          <td>
+            <label class="form-check-label" for="answer4_C">
+              Angewohnheiten wie Zähne aufeinander halten, Pressen/Knirschen
+              mit den Zähnen oder Kaugummikauen
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer4_C" value="0" id="answer4_C_0">
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer4_C" value="1" id="answer4_C_1">
+          </td>
+        </tr>
+
+        <tr>
+          <td>D.</td>
+          <td>
+            <label class="form-check-label" for="answer4_D">
+              Andere Aktivitäten wie Reden, Küssen oder Gähnen
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer4_D" value="0" id="answer4_D_0">
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer4_D" value="1" id="answer4_D_1">
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    <!-- Symptom 2 -->
+    <div class="symptom mt-5 mb-3" name="Symptom2">
+      <b>KOPFSCHMERZEN</b>
+    </div>
+
+    <!-- QUESTION 5 -->
+    <form class="tab mb-3" id="question5">
+      <div class="row">
+        <div class="col-9">
+          5. Hatten Sie in den letzten 30 Tagen Kopfschmerzen im
+          Schläfenbereich?
+        </div>
+        <div class="col text-end">
+          <div class="form-check form-check-inline mb-3">
+            <input class="form-check-input border-secondary" type="radio" name="answer5" value="0" id="answer5_0">
+            <label class="form-check-label" for="answer5_0">Nein</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer5" value="1" id="answer5_1">
+            <label class="form-check-label" for="answer5_1">Ja</label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- QUESTION 6 -->
+    <form class="tab mb-3" id="question6">
+      <div class="row">
+        <div class="col-6">
+          6. Vor wie vielen Jahren oder Monaten trat Ihr Schläfenkopfschmerz
+          erstmals auf?
+        </div>
+        <div class="col">
+          <input class="form-control border-secondary" type="number" id="answer6_years" style="width: 5em;">
+        </div>
+        <label class="col col-form-label" for="answer6_years">Jahre</label>
+        <div class="col">
+          <input class="form-control border-secondary" type="number" id="answer6_months" style="width: 5em;">
+        </div>
+        <label class="col col-form-label" for="answer6_months">Monate</label>
+      </div>
+    </form>
+
+    <!-- QUESTION 7 -->
+    <form class="tab mb-3" id="question7">
+      <p>7. Haben die folgenden Aktivitäten in den letzten 30 Tagen einen
+        Schläfenkopfschmerz auf einer oder beiden Seiten verändert
+        (d.h. verbessert bzw. verschlechtert)?</p>
+      <table class="table">
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Nein</th>
+          <th>Ja</th>
+        </tr>
+
+        <tr>
+          <td>A.</td>
+          <td><label class="form-check-label" for="answer7_A">Kauen von harter oder zäher Nahrung</label></td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer7_A" value="0" id="answer7_A_0">
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer7_A" value="1" id="answer7_A_1">
+          </td>
+        </tr>
+
+        <tr>
+          <td>B.</td>
+          <td>
+            <label class="form-check-label" for="answer7_B">
+              Öffnung des Mundes oder Bewegung des Kiefers nach vorn oder zur
+              Seite
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer7_B" value="0" id="answer7_B_0">
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer7_B" value="1" id="answer7_B_1">
+          </td>
+        </tr>
+
+        <tr>
+          <td>C.</td>
+          <td>
+            <label class="form-check-label" for="answer7_C">
+              Angewohnheiten wie Zähne aufeinander halten, Pressen/Knirschen
+              mit den Zähnen oder Kaugummikauen
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer7_C" value="0" id="answer7_C_0">
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer7_C" value="1" id="answer7_C_1">
+          </td>
+        </tr>
+
+        <tr>
+          <td>D.</td>
+          <td>
+            <label class="form-check-label" for="answer7_D">
+              Andere Aktivitäten wie Reden, Küssen oder Gähnen
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer7_D" value="0" id="answer7_D_0">
+          <td>
+            <input class="form-check-input border-secondary" type="radio" name="answer7_D" value="1" id="answer7_D_1">
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    <!-- Symptom 3 -->
+    <div class="symptom mt-5 mb-3" name="Symptom3">
+      <b>GELENKGERÄUSCHE</b>
+    </div>
+    <!-- QUESTION 8 -->
+    <form class="tab mb-3" id="question8">
+      <div class="row">
+        <div class="col-9">
+          8. Hatten Sie in den letzten 30 Tagen Gelenkgeräusche, wenn Sie Ihren
+          Kiefer bewegt oder benutzt haben?
+        </div>
+        <div class="col align-self-end text-end">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer8" value="0" id="answer8_0">
+            <label class="form-check-label" for="answer8_0">Nein</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer8" value="1" id="answer8_1">
+            <label class="form-check-label" for="answer8_1">Ja</label>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- Symptom 4 -->
+    <div class="symptom mt-5 mb-3" name="Symptom4">
+      <b>KIEFERKLEMME</b>
+    </div>
+    <!-- Question 9 -->
+    <form class="tab mb-3" id="question9">
+      <div class="row">
+        <div class="col-9">
+          9. War Ihre Mundöffnung <u>jemals</u>, auch nur für einen Moment blockiert,
+          sodass sich der Unterkiefer <u>nicht</u> VOLLSTÄNDIG öffnen ließ?
+        </div>
+        <div class="col align-self-end text-end">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer9" value="0" id="answer9_0">
+            <label class="form-check-label" for="answer9_0">Nein</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer9" value="1" id="answer9_1">
+            <label class="form-check-label" for="answer9_1">Ja</label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Question 10 -->
+    <form class="tab mb-3" id="question10">
+      <div class="row">
+        <div class="col-9">
+          10. War die Blockade Ihres Kiefers so stark, dass es Ihre Mundöffnung
+          eingeschränkt und Ihre Fähigkeit zu Essen beeinträchtigt hat?
+        </div>
+        <div class="col align-self-end text-end">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer10" value="0" id="answer10_0">
+            <label class="form-check-label" for="answer10_0">Nein</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer10" value="1" id="answer10_1">
+            <label class="form-check-label" for="answer10_1">Ja</label>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- Question 11 -->
+    <form class="tab mb-3" id="question11">
+      <div class="row">
+        <div class="col-9">
+          11. Hatten Sie in den letzten 30 Tagen eine Kieferklemme, sodass Sie
+          den Mund, wenn auch nur kurzzeitig, <u>nicht</u> VOLLSTÄNDIG
+          <u>öffnen</u> konnten, und löste sich diese anschließend, sodass
+          Sie den Mund VOLLSTÄNDIG öffnen konnten?
+        </div>
+        <div class="col align-self-end text-end">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer11" value="0" id="answer11_0">
+            <label class="form-check-label" for="answer11_0">Nein</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer11" value="1" id="answer11_1">
+            <label class="form-check-label" for="answer11_1">Ja</label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Question 12 -->
+    <form class="tab mb-3" id="question12">
+      <div class="row">
+        <div class="col-9">
+          12. Ist Ihr Kiefer gegenwärtig blockiert oder eingeschränkt, so dass sich
+          Ihr Kiefer nicht VOLLSTÄNDIG öffnen lässt?
+        </div>
+        <div class="col align-self-end text-end">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer12" value="0" id="answer12_0">
+            <label class="form-check-label" for="answer12_0">Nein</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer12" value="1" id="answer12_1">
+            <label class="form-check-label" for="answer12_1">Ja</label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Symptom 5 -->
+    <div class="symptom mt-5 mb-3" name="Symptom5">
+      <b>KIEFERSPERRE</b>
+    </div>
+    <!-- Question 13 -->
+    <form class="tab mb-3" id="question13">
+      <div class="row">
+        <div class="col-9">
+          13. Ist Ihr Kiefer in den letzten 30 Tagen, bei weiter Mundöffnung, auch
+          nur für einen kurzen Moment, blockiert bzw. hängen geblieben,
+          sodass Sie den Mund von dieser weit geöffneten Position aus <u>nicht</u>
+          mehr <u>schließen</u> konnten?
+        </div>
+        <div class="col align-self-end text-end">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer13" value="0" id="answer13_0">
+            <label class="form-check-label" for="answer13_0">Nein</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer13" value="1" id="answer13_1">
+            <label class="form-check-label" for="answer13_1">Ja</label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Question 14 -->
+    <form class="tab mb-3" id="question14">
+      <div class="row">
+        <div class="col-9">
+          14. Mussten Sie in den letzten 30 Tagen, als ihr Kiefer weit geöffnet
+          blockiert oder hängen geblieben war, etwas unternehmen, um ihn
+          schließen zu können, z.B. entspannen, bewegen, drücken oder
+          umlenken?
+        </div>
+        <div class="col align-self-end text-end">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer14" value="0" id="answer14_0">
+            <label class="form-check-label" for="answer14_0">Nein</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="answer14" value="1" id="answer14_1">
+            <label class="form-check-label" for="answer14_1">Ja</label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="pagebreak"></div>
+
+    <!-- 2. FRAGEBOGEN -->
+    <div class="text-center text-secondary tab anamnese-headline mt-5 mb-3" id="anam-headline-2">
+      <h4>Gesundheitsfragebogen für Patienten (PHQ-4)</h4>
+    </div>
+
+    <!-- Question 15 -->
+    <form class="tab mb-3" id="question15">
+      <p>Wie oft fühlten Sie sich im Verlauf der <u>letzten 2 Wochen</u> durch die folgenden
+        Beschwerden beeinträchtigt?</p>
+
+      <table class="table">
+        <tr>
+          <th></th>
+          <th></th>
+          <th class="text-center">
+            <div class="mb-2">
+              Überhaupt nicht
+            </div>
+            0
+          </th>
+          <th class="text-center">
+            <div class="mb-2">
+              An einzelnen Tagen
+            </div>
+            1
+          </th>
+          <th class="text-center">
+            <div class="mb-2">
+              An mehr als der Hälfte der Tage
+            </div>
+            2
+          </th>
+          <th class="text-center">
+            <div class="mb-2">
+              Beinahe jeden Tag
+            </div>
+            3
+          </th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>Nervosität, Ängstlichkeit oder Anspannung</td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-1" value="0"
+              id="phq-4-radio-1_0">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-1" value="1"
+              id="phq-4-radio-1_1">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-1" value="2"
+              id="phq-4-radio-1_2">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-1" value="3"
+              id="phq-4-radio-1_3">
+          </td>
+        </tr>
+
+        <tr>
+          <td>2.</td>
+          <td>Nicht in der Lage sein, Sorgen zu stoppen oder zu kontrollieren</td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-2" value="0"
+              id="phq-4-radio-2_0">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-2" value="1"
+              id="phq-4-radio-2_1">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-2" value="2"
+              id="phq-4-radio-2_2">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-2" value="3"
+              id="phq-4-radio-2_3">
+          </td>
+        </tr>
+
+        <tr>
+          <td>3.</td>
+          <td>Wenig Interesse oder Freude an Ihren Tätigkeiten</td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-3" value="0"
+              id="phq-4-radio-3_0">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-3" value="1"
+              id="phq-4-radio-3_1">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-3" value="2"
+              id="phq-4-radio-3_2">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-3" value="3"
+              id="phq-4-radio-3_3">
+          </td>
+        </tr>
+
+        <tr class="border-bottom">
+          <td>4.</td>
+          <td>Niedergeschlagenheit, Schwermut oder Hoffnungslosigkeit</td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-4" value="0"
+              id="phq-4-radio-4_0">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-4" value="1"
+              id="phq-4-radio-4_1">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-4" value="2"
+              id="phq-4-radio-4_2">
+          </td>
+          <td class="text-center">
+            <input class="form-check-input border border-secondary" type="radio" name="phq-4-radio-4" value="3"
+              id="phq-4-radio-4_3">
+          </td>
+        </tr>
+      </table>
+      <div class="row mb-3 px-2">
+        <div class="col pb-2 border-bottom">
+          GESAMTWERT = <span id="phq-total-value-field">0</span>
+        </div>
+      </div>
+    </form>
+
+    <!-- 3. FRAGEBOGEN -->
+    <div class="text-center text-secondary tab anamnese-headline mt-5 mb-3" id="anam-headline-3">
+      <h4>Graduierung chronischer Schmerzen</h4>
+    </div>
+
+    <form class="tab mb-3" id="question16">
+      <!-- Frage 1 -->
+      <div class="row">
+        <div class="col-9">
+          An wie vielen Tagen in den letzten 6 Monaten hatten Sie Gesichtsschmerzen?
+        </div>
+        <div class="col">
+          <input class="form-control border-secondary" type="number" id="gcp1" min="0" max="183" style="width: 5em;">
+        </div>
+        <label class="col col-form-label" for="gcp1">Tage</label>
+      </div>
+    </form>
+
+    <form class="tab mb-3" id="question17">
+      <!-- Frage 2 -->
+      <div class="row">
+        <div class="col-9">
+          Wie würden Sie Ihre Gesichtsschmerzen zum <b>JETZIGEN</b> Zeitpunkt einschätzen? Verwenden Sie
+          eine Skala von 0 bis 10, bei der 0 „kein Schmerz“ und 10 „stärkster vorstellbarer Schmerz“ bedeutet.
+        </div>
+        <div class="col align-self-end">
+          <select class="form-select border border-secondary" id="gcp2" required>
+            <option selected disabled value="">wählen...</option>
+            <option value="0">0 (Kein Schmerz)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10 (Stärkster vorstellbarer Schmerz)</option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <form class="tab mb-3" id="question18">
+      <!-- Frage 3 -->
+      <div class="row">
+        <div class="col-9">
+          Wie würden Sie Ihren <b>STÄRKSTEN</b> Gesichtsschmerz in den <u>LETZTEN 30 TAGEN</u> einschätzen?
+          Verwenden Sie die gleiche Skala, bei der 0 „kein Schmerz“ und 10 „stärkster vorstellbarer Schmerz“
+          bedeutet.
+        </div>
+        <div class="col align-self-end">
+          <select class="form-select border border-secondary" id="gcp3" required>
+            <option selected disabled value="">wählen...</option>
+            <option value="0">0 (Kein Schmerz)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10 (Stärkster vorstellbarer Schmerz)</option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <form class="tab mb-3" id="question19">
+      <!-- Frage 4 -->
+      <div class="row">
+        <div class="col-9">
+          Wie würden Sie Ihre <b>DURCHSCHNITTLICHEN</b> Gesichtsschmerzen in den <u>LETZTEN 30 TAGEN</u>
+          einschätzen. Verwenden Sie die gleiche Skala, bei der 0 „kein Schmerz“ und 10 „stärkster vorstellbarer
+          Schmerz“ bedeutet. [Gemeint ist Ihr gewöhnlicher Schmerz, wenn Sie Schmerzen hatten.]
+        </div>
+        <div class="col align-self-end">
+          <select class="form-select border border-secondary" id="gcp4" required>
+            <option selected disabled value="">wählen...</option>
+            <option value="0">0 (Kein Schmerz)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10 (Stärkster vorstellbarer Schmerz)</option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <form class="tab mb-3" id="question20">
+      <!-- Frage 5 -->
+      <div class="row">
+        <div class="col-9">
+          Wie viele Tage haben Ihre Gesichtsschmerzen Sie in den <u>LETZTEN 30 TAGEN</u> von Ihren <b>ÜBLICHEN
+            AKTIVITÄTEN</b> wie Arbeit, Schule oder Hausarbeit abgehalten?
+        </div>
+        <div class="col align-self-end">
+          <select class="form-select border border-secondary" id="gcp5" required>
+            <option selected disabled value="">wählen...</option>
+            <option value="0">0 (Kein Schmerz)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10 (Stärkster vorstellbarer Schmerz)</option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <form class="tab mb-3" id="question21">
+      <!-- Frage 6 -->
+      <div class="row">
+        <div class="col-9">
+          Wie stark haben Ihre Gesichtsschmerzen Sie in den <u>LETZTEN 30 TAGEN</u> bei Ihren <b>TÄGLICHEN
+            AKTIVITÄTEN</b> beeinträchtigt? Verwenden Sie eine Skala von 0 bis 10, bei der 0 „keine Beeinträchtigung“
+          und 10
+          „unfähig, irgendeine Tätigkeit auszuüben“ bedeutet.
+        </div>
+        <div class="col align-self-end">
+          <select class="form-select border border-secondary" id="gcp6" required>
+            <option selected disabled value="">wählen...</option>
+            <option value="0">0 (Kein Schmerz)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10 (Stärkster vorstellbarer Schmerz)</option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <form class="tab mb-3" id="question22">
+      <!-- Frage 7 -->
+      <div class="row">
+        <div class="col-9">
+          Wie stark haben Ihre Gesichtsschmerzen Sie in den <u>LETZTEN 30 TAGEN</u> bei Ihren <b>FREIZEIT-,
+            GESELLSCHAFTS- UND FAMILIENAKTIVITÄTEN</b> beeinträchtigt? Verwenden Sie die gleiche Skala von 0 bis 10,
+          bei der 0 „keine Beeinträchtigung“ und 10 „unfähig, irgendeine Tätigkeit auszuüben“ bedeutet.
+        </div>
+        <div class="col align-self-end">
+          <select class="form-select border border-secondary" id="gcp7" required>
+            <option selected disabled value="">wählen...</option>
+            <option value="0">0 (Kein Schmerz)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10 (Stärkster vorstellbarer Schmerz)</option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <form class="tab mb-5" id="question23">
+      <!-- Frage 8 -->
+      <div class="row">
+        <div class="col-9">
+          Wie stark haben Ihre Gesichtsschmerzen in den <u>LETZTEN 30 TAGEN</u> Ihre <b>ARBEITSFÄHIGKEIT</b>,
+          einschließlich Hausarbeit, beeinträchtigt? Verwenden Sie die gleiche Skala von 0 bis 10, bei der 0 „keine
+          Beeinträchtigung“ und 10 „unfähig, irgendeine Tätigkeit auszuüben“ bedeutet.
+        </div>
+        <div class="col align-self-end">
+          <select class="form-select border border-secondary" id="gcp8" required>
+            <option selected disabled value="">wählen...</option>
+            <option value="0">0 (Kein Schmerz)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10 (Stärkster vorstellbarer Schmerz)</option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <!-- anamnesis submit button/ next button -->
+    <div class="container-fixed mx-0 px-0 mt-5 mb-5 noPrint anamnesis-submit-button-div">
+      <div class="d-grid gap-2">
+        <button class="btn btn-primary anamnesis-submit-button" type="button">
+          <strong>Weiter zur Untersuchung</strong>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="examination">
+    <div class="container-fixed pt-5">
+
+      <!-- patient code display -->
+      <div class="container tab mt-3 mb-3" id="code-display2">
+        <div class="row">
+          <div class="col-9">
+          </div>
+          <div class="col text-end">
+            <h5>Patienten Code</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-9">
+          </div>
+          <div class="col text-end">
+            <TEXT-TAG style="font-size:24px"><span id="code-display-field2">CODENAME</span></TEXT-TAG>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="mb-4 text-center text-secondary summary-anamnesis" style="display: none;">
+        <h4>Resultate der Anamnese</h4>
+      </div>
+
+      <div class="container-fixed mb-3 summary-anamnesis-warning" style="display: none">
+        <div class="shadow-sm p-3 rounded text-center severe-patient-warning bg-danger-subtle">
+        </div>
+      </div>
+
+      <div class="container-fixed mb-5 summary-anamnesis" style="display: none">
+        <div class="container-fixed">
+          <div class="shadow-sm p-3 bg-info-subtle rounded text-center summary-anamnesis-info">
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3 text-center text-secondary">
+        <h4>Untersuchungsbogen</h4>
+      </div>
+      <!-- Untersuchung 1a -->
+      <div class="container-fixed mb-4 examination-page-1">
+        <div class="mb-3">
+          <strong>1a. Schmerzlokatisation: letzte 30 Tage</strong> (Alle zutreffenden ankreuzen)
+        </div>
+        <div class="container-fixed ">
+          <div class="row">
+            <div class="col check-group-required">
+              <form id="1aR-form">
+                <examination-table-frame headline="RECHTSSEITIGE SCHMERZEN" class="frame" id="1aR">
+                  <div class="container mb-3">
+                    <div class="row">
+                      <div class="col">
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary select-none" name="1aR-checkbox"
+                            type="checkbox" id="1aR_0">
+                          <label class="form-check-label" for="1aR_0" id="1aR_0_label">Keine</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary" name="1aR-checkbox" type="checkbox"
+                            id="1aR_1">
+                          <label class="form-check-label" for="1aR_1" id="1aR_1_label">Temporalis</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary" name="1aR-checkbox" type="checkbox"
+                            id="1aR_2">
+                          <label class="form-check-label" for="1aR_2" id="1aR_2_label">Masseter</label>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary" name="1aR-checkbox" type="checkbox"
+                            id="1aR_3">
+                          <label class="form-check-label" for="1aR_3" id="1aR_3_label">Kiefergelenk</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary" name="1aR-checkbox" type="checkbox"
+                            id="1aR_4">
+                          <label class="form-check-label" for="1aR_4" id="1aR_4_label">Andere Kaumuskeln</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary" name="1aR-checkbox" type="checkbox"
+                            id="1aR_5">
+                          <label class="form-check-label" for="1aR_5" id="1aR_5_label">Nicht-mastik. Kaumuskeln</label>
+                          <div class="invalid-feedback">Bitte eine Antwort wählen.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </examination-table-frame>
+              </form>
+              <div class="shadow-sm p-3 mb-3 bg-danger-subtle rounded text-center custom-warning" id="1aR-required">
+                Erforderlich
+              </div>
+              <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="1aR-info">
+                Info
+              </div>
+            </div>
+            <div class="col check-group-required">
+              <form id="1aL-form">
+                <examination-table-frame headline="LINKSSEITIGE SCHMERZEN" class="frame" id="1aL">
+                  <div class="container mb-3">
+                    <div class="row">
+                      <div class="col">
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary select-none" type="checkbox" id="1aL_0">
+                          <label class="form-check-label" for="1aL_0" id="1aL_0_label">Keine</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary" type="checkbox" id="1aL_1">
+                          <label class="form-check-label" for="1aL_1" id="1aL_1_label">Temporalis</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary" type="checkbox" id="1aL_2">
+                          <label class="form-check-label" for="1aL_2" id="1aL_2_label">Masseter</label>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary" type="checkbox" id="1aL_3">
+                          <label class="form-check-label" for="1aL_3" id="1aL_3_label">Kiefergelenk</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary" type="checkbox" id="1aL_4">
+                          <label class="form-check-label" for="1aL_4" id="1aL_4_label">Andere Kaumuskeln</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input border-secondary" type="checkbox" id="1aL_5">
+                          <label class="form-check-label" for="1aL_5" id="1aL_5_label">Nicht-mastik. Kaumuskeln</label>
+                          <div class="invalid-feedback">Bitte eine Antwort wählen.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </examination-table-frame>
+              </form>
+              <div class="shadow-sm p-3 mb-3 bg-danger-subtle rounded text-center custom-warning">
+                Erforderlich
+              </div>
+              <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info">
+                Info
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Untersuchung 1b -->
+      <div class="container-fixed mb-5 examination-page-1">
+        <div class="mb-3">
+          <strong>1b. Kopfschmerzlokatisation: letzte 30 Tage</strong> (Alle zutreffenden ankreuzen)
+        </div>
+        <div class="container-fixed">
+          <div class="row">
+            <div class="col check-group-required">
+              <form id="1bR-form">
+                <examination-table-frame headline="RECHTSSEITIGE SCHMERZEN" class="frame" id="1bR">
+                  <div class="container mb-3">
+                    <div class="form-check">
+                      <input class="form-check-input border-secondary select-none" type="checkbox" id="1bR_0">
+                      <label class="form-check-label" for="1bR_0" id="1bR_0_label">Keine</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input border-secondary" type="checkbox" id="1bR_1">
+                      <label class="form-check-label" for="1bR_1" id="1bR_1_label">Temporalis</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input border-secondary" type="checkbox" id="1bR_2">
+                      <label class="form-check-label" for="1bR_2" id="1bR_2_label">Andere</label>
+                      <div class="invalid-feedback">Bitte eine Antwort wählen.</div>
+                    </div>
+                  </div>
+                </examination-table-frame>
+              </form>
+              <div class="shadow-sm p-3 mb-3 bg-danger-subtle rounded text-center custom-warning" id="1bR-required">
+                Erforderlich
+              </div>
+              <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="1bR-info">
+                Info
+              </div>
+            </div>
+            <div class="col check-group-required">
+              <form id="1bL-form">
+                <examination-table-frame headline="LINKSSEITIGE SCHMERZEN" class="frame" id="1bL">
+                  <div class="container mb-3">
+                    <div class="form-check">
+                      <input class="form-check-input border-secondary select-none" type="checkbox" id="1bL_0">
+                      <label class="form-check-label" for="1bL_0" id="1bL_0_label">Keine</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input border-secondary" type="checkbox" id="1bL_1">
+                      <label class="form-check-label" for="1bL_1" id="1bL_1_label">Temporalis</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input border-secondary" type="checkbox" id="1bL_2">
+                      <label class="form-check-label" for="1bL_2" id="1bL_2_label">Andere</label>
+                      <div class="invalid-feedback">Bitte eine Antwort wählen.</div>
+                    </div>
+                  </div>
+                </examination-table-frame>
+              </form>
+              <div class="shadow-sm p-3 mb-3 bg-danger-subtle rounded text-center custom-warning" id="1bL-required">
+                Erforderlich
+              </div>
+              <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="1bL-info">
+                Info
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Untersuchung 2 -->
+      <div class="container-fixed mb-5 invis">
+        <form>
+          <b>2. Schneidekantenverhältnisse</b>
+          <div class="container-fixed m-3 p-3">
+            <div class="mb-3 row">
+              <label for="2_ref" class="col col-form-label">Referenzzahn</label>
+              <div class="col">
+                <select class="form-select border-secondary" id="2_ref" aria-label="ref select">
+                  <option selected value=""></option>
+                  <option value="11">11</option>
+                  <option value="21">21</option>
+                  <option value="Anderer">Anderer</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="2_horizontal" class="col col-form-label">Horizontaler inzisaler Überbiss</label>
+              <div class="col"></div>
+              <div class="col input-group">
+                <input class="form-control border-secondary" id="2_horizontal" type="number" min="-99" max="99">
+                <span class="input-group-text border-secondary">mm</span>
+              </div>
+            </div>
+            <div class=" mb-3 row">
+              <label for="2_vertical" class="col col-form-label">Vertikaler inzisaler Überbiss</label>
+              <div class="col"></div>
+              <div class="col input-group">
+                <input class="form-control border-secondary" id="2_vertical" type="number" min="-99" max="99">
+                <span class="input-group-text border-secondary">mm</span>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="2_center_dev" class="col col-form-label">Mittellinien Abweichung</label>
+              <div class="col">
+                <select class="form-select border-secondary" id="2_side" aria-label="side select">
+                  <option selected value=""></option>
+                  <option value="R">Rechts</option>
+                  <option value="L">Links</option>
+                  <option value="N/A">N/A</option>
+                </select>
+              </div>
+              <div class="col input-group">
+                <input class="form-control border-secondary" id="2_center_dev" type="number" min="0" max="99">
+                <span class="input-group-text border-secondary">mm</span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- Untersuchung 3 -->
+      <div class="container-fixed mb-5 invis">
+        <b>3. Öffnungs- und Schließmuster</b>
+        <form>
+          <div class="container-fixed m-3 p-3">
+            <div class="row">
+              <select class="form-select border-secondary" id="3_select" aria-label="3 select">
+                <option selected value=""></option>
+                <option value="1">Gerade</option>
+                <option value="2">korrigierte Deviation</option>
+                <option value="3">Unkorrigierte Deviation nach rechts</option>
+                <option value="4">Unkorrigierte Deviation nach links</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- Untersuchung 4 -->
+      <div class="container-fixed mb-5 examination-page-2">
+        <form>
+          <b>4. Öffnungsbewegung</b>
+          <!-- Untersuchung 4A -->
+          <div class="container-fixed mt-3 mb-3 custom-input-warning-component">
+            <div class="row">
+              <label for="4A_opening" class="col col-form-label">A. Schmerzfreie Mundöffnung</label>
+              <div class="col input-group mb-2">
+                <input class="form-control border-secondary" id="4A_opening" type="number" min="0" max="99">
+                <span class="input-group-text border-secondary">mm</span>
+              </div>
+              <div class="col"></div>
+            </div>
+            <div class="row custom-input-warning" style="display: none">
+              <div class="col"></div>
+              <div class="col">
+                <div class="container text-center shadow-sm p-2 mb-3 bg-warning-subtle rounded">
+                  Angabe überprüfen
+                </div>
+              </div>
+              <div class="col"></div>
+            </div>
+          </div>
+          <!-- Untersuchung 4B -->
+          <div class="container-fixed mt-4 mb-4 custom-input-warning-component">
+            <div class="row">
+              <label for="4B_opening" class="col col-form-label">B. Maximale aktive Mundöffnung</label>
+              <div class="col input-group mb-2">
+                <input class="form-control border-secondary" id="4B_opening" type="number" min="0" max="99">
+                <span class="input-group-text border-secondary">mm</span>
+              </div>
+              <div class="col"></div>
+            </div>
+            <div class="row custom-input-warning" style="display: none;">
+              <div class="col"></div>
+              <div class="col">
+                <div class="container text-center shadow-sm p-2 mb-3 bg-warning-subtle rounded">
+                  Angabe überprüfen
+                </div>
+              </div>
+              <div class="col"></div>
+            </div>
+          </div>
+          <!------------------  Untersuchungstabelle 4B -------------------------->
+          <div class="container-fixed">
+            <div class="row">
+              <div class="col radio-table">
+                <examination-table-frame headline="RECHTE SEITE" class="frame" id="4BR-frame">
+                  <examination-table-content class="table-content" table-id="4BR" id="4BR">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-row">Temporalis</div>
+                    <div class="ex-table-row" skip="2">Masseter</div>
+                    <div class="ex-table-row" skip="2">Kiefergelenk</div>
+                    <div class="ex-table-row" skip="2">Andere Kaum.</div>
+                    <div class="ex-table-row" skip="2">Nicht-Kaum.</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="4BR-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="4BR-info">
+                  info
+                </div>
+              </div>
+              <div class="col radio-table">
+                <examination-table-frame headline="LINKE SEITE" class="frame" id="4BL-frame">
+                  <examination-table-content class="table-content" table-id="4BL" id="4BL">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-row">Temporalis</div>
+                    <div class="ex-table-row" skip="2">Masseter</div>
+                    <div class="ex-table-row" skip="2">Kiefergelenk</div>
+                    <div class="ex-table-row" skip="2">Andere Kaum.</div>
+                    <div class="ex-table-row" skip="2">Nicht-Kaum.</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="4BL-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="4BL-info">
+                  info
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pagebreak"> </div>
+
+          <!-------------------------------------------------------------------------->
+          <div class="container-fixed mt-4 mb-4 custom-input-warning-component">
+            <div class="row">
+              <label for="4C_opening" class="col col-form-label">C. Maximale passive Mundöffnung</label>
+              <div class="col input-group mb-2">
+                <input class="form-control border-secondary" id="4C_opening" type="number" min="0" max="99">
+                <span class="input-group-text border-secondary">mm</span>
+              </div>
+              <div class="col"></div>
+            </div>
+            <div class="row custom-input-warning" style="display: none">
+              <div class="col"></div>
+              <div class="col">
+                <div class="container text-center shadow-sm p-2 mb-3 bg-warning-subtle rounded">
+                  Angabe überprüfen
+                </div>
+              </div>
+              <div class="col"></div>
+            </div>
+          </div>
+          <!--------------------------- Untersuchungstabelle 4C --------------------------->
+          <div class="container-fixed">
+            <div class="row">
+              <div class="col radio-table">
+                <examination-table-frame headline="RECHTE SEITE" class="frame" id="4CR-frame">
+                  <examination-table-content class="table-content" table-id="4CR" id="4CR">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-row">Temporalis</div>
+                    <div class="ex-table-row" skip="2">Masseter</div>
+                    <div class="ex-table-row" skip="2">Kiefergelenk</div>
+                    <div class="ex-table-row" skip="2">Andere Kaum.</div>
+                    <div class="ex-table-row" skip="2">Nicht-Kaum.</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="4CR-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="4CR-info">
+                  info
+                </div>
+              </div>
+              <div class="col radio-table">
+                <examination-table-frame headline="LINKE SEITE" class="frame" id="4CL-frame">
+                  <examination-table-content class="table-content" table-id="4CL" id="4CL">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-row">Temporalis</div>
+                    <div class="ex-table-row" skip="2">Masseter</div>
+                    <div class="ex-table-row" skip="2">Kiefergelenk</div>
+                    <div class="ex-table-row" skip="2">Andere Kaum.</div>
+                    <div class="ex-table-row" skip="2">Nicht-Kaum.</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="4CL-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="4CL-info">
+                  info
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-------------------------------------------------------------------------->
+          <p>Abgebrochen?
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="4D" value="0">
+            <label class="form-check-label">Nein</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input border-secondary" type="radio" name="4D" value="1">
+            <label class="form-check-label">Ja</label>
+          </div>
+        </form>
+      </div>
+
+      <!-- Untersuchung 5 -->
+      <div class="container-fixed mb-5 examination-page-2">
+        <b>5. Laterotrusion und Protrusion</b>
+        <form>
+          <!-- Untersuchung 5A -->
+          <div class="container-fixed mt-3 mb-3 custom-input-warning-component">
+            <div class="row">
+              <label for="5A_opening" class="col col-form-label">A. Laterotrusion nach rechts</label>
+              <div class="col input-group mb-2">
+                <input class="form-control border-secondary" id="5A_latR" type="number" min="0" max="99">
+                <span class="input-group-text border-secondary">mm</span>
+              </div>
+              <div class="col"></div>
+            </div>
+            <div class="row custom-input-warning" style="display: none">
+              <div class="col"></div>
+              <div class="col">
+                <div class="container text-center shadow-sm p-2 mb-3 bg-warning-subtle rounded">
+                  Angabe überprüfen
+                </div>
+              </div>
+              <div class="col"></div>
+            </div>
+          </div>
+
+          <div class="container-fixed">
+            <div class="row">
+              <div class="col radio-table">
+                <examination-table-frame headline="RECHTE SEITE" class="frame" id="5AR-frame">
+                  <examination-table-content class="table-content" table-id="5AR" id="5AR">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-row">Temporalis</div>
+                    <div class="ex-table-row" skip="2">Masseter</div>
+                    <div class="ex-table-row" skip="2">Kiefergelenk</div>
+                    <div class="ex-table-row" skip="2">Andere Kaum.</div>
+                    <div class="ex-table-row" skip="2">Nicht-Kaum.</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="5AR-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="5AR-info">
+                  info
+                </div>
+              </div>
+              <div class="col radio-table">
+                <examination-table-frame headline="LINKE SEITE" class="frame" id="5AL-frame">
+                  <examination-table-content class="table-content" table-id="5AL" id="5AL">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-row">Temporalis</div>
+                    <div class="ex-table-row" skip="2">Masseter</div>
+                    <div class="ex-table-row" skip="2">Kiefergelenk</div>
+                    <div class="ex-table-row" skip="2">Andere Kaum.</div>
+                    <div class="ex-table-row" skip="2">Nicht-Kaum.</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="5AL-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="5AL-info">
+                  info
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Untersuchung 5B -->
+          <div class="container-fixed mt-3 mb-3 custom-input-warning-component">
+            <div class="row">
+              <label for="5B_opening" class="col col-form-label">B. Laterotrusion nach links</label>
+              <div class="col input-group mb-2">
+                <input class="form-control border-secondary" id="5B_latL" type="number" min="0" max="99">
+                <span class="input-group-text border-secondary">mm</span>
+              </div>
+              <div class="col"></div>
+            </div>
+            <div class="row custom-input-warning" style="display: none">
+              <div class="col"></div>
+              <div class="col">
+                <div class="container text-center shadow-sm p-2 mb-3 bg-warning-subtle rounded">
+                  Angabe überprüfen
+                </div>
+              </div>
+              <div class="col"></div>
+            </div>
+          </div>
+
+          <div class="container-fixed">
+            <div class="row">
+              <div class="col radio-table">
+                <examination-table-frame headline="RECHTE SEITE" class="frame" id="5BR-frame">
+                  <examination-table-content class="table-content" table-id="5BR" id="5BR">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-row">Temporalis</div>
+                    <div class="ex-table-row" skip="2">Masseter</div>
+                    <div class="ex-table-row" skip="2">Kiefergelenk</div>
+                    <div class="ex-table-row" skip="2">Andere Kaum.</div>
+                    <div class="ex-table-row" skip="2">Nicht-Kaum.</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="5BR-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="5BR-info">
+                  info
+                </div>
+              </div>
+              <div class="col radio-table">
+                <examination-table-frame headline="LINKE SEITE" class="frame" id="5BL-frame">
+                  <examination-table-content class="table-content" table-id="5BL" id="5BL">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-row">Temporalis</div>
+                    <div class="ex-table-row" skip="2">Masseter</div>
+                    <div class="ex-table-row" skip="2">Kiefergelenk</div>
+                    <div class="ex-table-row" skip="2">Andere Kaum.</div>
+                    <div class="ex-table-row" skip="2">Nicht-Kaum.</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="5BL-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="5BL-info">
+                  info
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="container-fixed mt-3 mb-3 custom-input-warning-component">
+            <div class="row">
+              <label for="5C_protr" class="col col-form-label">C. Protrusion</label>
+              <div class="col input-group mb-2">
+                <input class="form-control border-secondary" id="5C_protr" type="number" min="0" max="99">
+                <span class="input-group-text border-secondary">mm</span>
+              </div>
+              <div class="col"></div>
+            </div>
+            <div class="row custom-input-warning" style="display: none">
+              <div class="col"></div>
+              <div class="col">
+                <div class="container text-center shadow-sm p-2 mb-3 bg-warning-subtle rounded">
+                  Angabe überprüfen
+                </div>
+              </div>
+              <div class="col"></div>
+            </div>
+          </div>
+         
+          <div class="container-fixed">
+            <div class="row">
+              <div class="col radio-table">
+                <examination-table-frame headline="RECHTE SEITE" class="frame" id="5CR-frame">
+                  <examination-table-content class="table-content" table-id="5CR" id="5CR">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-row">Temporalis</div>
+                    <div class="ex-table-row" skip="2">Masseter</div>
+                    <div class="ex-table-row" skip="2">Kiefergelenk</div>
+                    <div class="ex-table-row" skip="2">Andere Kaum.</div>
+                    <div class="ex-table-row" skip="2">Nicht-Kaum.</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="5CR-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="5CR-info">
+                  info
+                </div>
+              </div>
+              <div class="col radio-table">
+                <examination-table-frame headline="LINKE SEITE" class="frame" id="5CL-frame">
+                  <examination-table-content class="table-content" table-id="5CL" id="5CL">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-row">Temporalis</div>
+                    <div class="ex-table-row" skip="2">Masseter</div>
+                    <div class="ex-table-row" skip="2">Kiefergelenk</div>
+                    <div class="ex-table-row" skip="2">Andere Kaum.</div>
+                    <div class="ex-table-row" skip="2">Nicht-Kaum.</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="5CL-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="5CL-info">
+                  info
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="pagebreak"> </div>
+
+      <!-- Untersuchung 6 -->
+      <div class="container-fixed mb-5 examination-page-2">
+        <form>
+          <div class="mb-3">
+            <b>6. Kiefergelenkgeräusche bei Öffnungs- und Schließbewegungen</b>
+          </div>
+          <div class="container-fixed">
+            <div class="row">
+              <div class="col radio-table">
+                <examination-table-frame headline="RECHTES KIEFERGELENK" class="frame" id="6R-frame">
+                  <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-4 text-center border-bottom border-secondary-subtle">Untersucher</div>
+                    <div class="col-2">Patient</div>
+                    <div class="col-2"></div>
+                    <div class="col-2"></div>
+                  </div>
+                  <examination-table-content class="table-content" table-id="6R" id="6R">
+                    <div class="ex-table-header">Öffnen</div>
+                    <div class="ex-table-header">Schließen</div>
+                    <div class="ex-table-header"></div>
+                    <div class="ex-table-header">Schmerzh. Knacken</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-row">Knacken</div>
+                    <div class="ex-table-row" skip="3 4">Reiben</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="6R-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="6R-info">
+                  info
+                </div>
+              </div>
+              <div class="col radio-table">
+                <examination-table-frame headline="LINKES KIEFERGELENK" class="frame" id="6L-frame">
+                  <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-4 text-center border-bottom border-secondary-subtle">Untersucher</div>
+                    <div class="col-2">Patient</div>
+                    <div class="col-2"></div>
+                    <div class="col-2"></div>
+                  </div>
+                  <examination-table-content class="table-content" table-id="6L" id="6L">
+                    <div class="ex-table-header">Öffnen</div>
+                    <div class="ex-table-header">Schließen</div>
+                    <div class="ex-table-header"></div>
+                    <div class="ex-table-header">Schmerzh. Knacken</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-row">Knacken</div>
+                    <div class="ex-table-row" skip="3 4">Reiben</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="6L-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="6L-info">
+                  info
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Untersuchung 7 -->
+      <div class="container-fixed mb-5 examination-page-2">
+        <form>
+          <div class="mb-3">
+            <b>7. Kiefergelenkgeräusche bei Laterotrusion und Protrusion</b>
+          </div>
+          <div class="container-fixed">
+            <div class="row">
+              <div class="col radio-table">
+                <examination-table-frame headline="RECHTES KIEFERGELENK" class="frame" id="7R-frame">
+                  <examination-table-content class="table-content" table-id="7R" id="7R">
+                    <div class="ex-table-header">Untersucher</div>
+                    <div class="ex-table-header">Patient</div>
+                    <div class="ex-table-header">Schmerzh. Knacken</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-row">Knacken</div>
+                    <div class="ex-table-row" skip="2 3">Reiben</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="7R-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="7R-info">
+                  info
+                </div>
+              </div>
+              <div class="col radio-table">
+                <examination-table-frame headline="LINKES KIEFERGELENK" class="frame" id="7L-frame">
+                  <examination-table-content class="table-content" table-id="7L" id="7L">
+                    <div class="ex-table-header">Untersucher</div>
+                    <div class="ex-table-header">Patient</div>
+                    <div class="ex-table-header">Schmerzh. Knacken</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-row">Knacken</div>
+                    <div class="ex-table-row" skip="2 3">Reiben</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="7L-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="7L-info">
+                  info
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Untersuchung 8 -->
+      <div class="container-fixed mb-5 examination-page-2">
+        <form>
+          <div class="mb-3">
+            <b>8. Kieferklemme/-sperre</b>
+          </div>
+          <div class="container-fixed">
+            <div class="row">
+              <div class="col radio-table">
+                <examination-table-frame headline="RECHTES KIEFERGELENK" class="frame" id="8R-frame">
+                  <div class="row">
+                    <div class="col-5"></div>
+                    <div class="col-3"></div>
+                    <div class="col-3 text-center border-bottom border-secondary-subtle">Reduction</div>
+                  </div>
+                  <examination-table-content class="table-content" table-id="8R" id="8R" first-col="-5">
+                    <div class="ex-table-header">Locking</div>
+                    <div class="ex-table-header">Patient</div>
+                    <div class="ex-table-header">Examiner</div>
+
+                    <div class="ex-table-row">Während der Öffnung</div>
+                    <div class="ex-table-row">Bei weiter Mundöffnung</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="8R-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="8R-info">
+                  info
+                </div>
+              </div>
+              <div class="col radio-table">
+                <examination-table-frame headline="LINKES KIEFERGELENK" class="frame" id="8L-frame">
+                  <div class="row">
+                    <div class="col-5"></div>
+                    <div class="col-3"></div>
+                    <div class="col-3 text-center border-bottom border-secondary-subtle">Reduction</div>
+                  </div>
+                  <examination-table-content class="table-content" table-id="8L" id="8L" first-col="-5">
+                    <div class="ex-table-header">Locking</div>
+                    <div class="ex-table-header">Patient</div>
+                    <div class="ex-table-header">Examiner</div>
+
+                    <div class="ex-table-row">Während der Öffnung</div>
+                    <div class="ex-table-row">Bei weiter Mundöffnung</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="8L-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="8L-info">
+                  info
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+      <!-- Untersuchung 9 -->
+      <div class="container-fixed mb-5 examination-page-2">
+        <form>
+          <div class="mb-3">
+            <b>9. Muskel- & Kiefergelenkschmerzen bei Palpation</b>
+          </div>
+          <div class="container-fixed">
+            <div class="row">
+              <div class="col radio-table">
+                <examination-table-frame headline="RECHTE SEITE" class="frame" id="9R-frame">
+                  <examination-table-content class="table-content" table-id="9aR" id="9aR" first-col="-4"
+                    first-col-label="(1kg)">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-header">Übertr. Schmerz</div>
+                    <div class="ex-table-row">Temporalis (post.)</div>
+                    <div class="ex-table-row">Temporalis (media.)</div>
+                    <div class="ex-table-row">Temporalis (ant.)</div>
+                    <div class="ex-table-row" skip="2">Masseter (Urspr.)</div>
+                    <div class="ex-table-row" skip="2">Masseter (Körper)</div>
+                    <div class="ex-table-row" skip="2">Masseter (Ansatz)</div>
+                  </examination-table-content>
+                  <div class="pb-3"></div>
+                  <examination-table-content class="table-content" table-id="9bR" id="9bR" first-col="-5"
+                    first-col-label="Kiefergelenk">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Übertragener Schmerz</div>
+                    <div class="ex-table-row">Lateraler Pol <b>(0.5 kg)</b> </div>
+                    <div class="ex-table-row">Um den lateralen Pol <b>(1 kg)</b></div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="9R-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="9R-info">
+                  info
+                </div>
+              </div>
+              <div class="col radio-table">
+                <examination-table-frame headline="LINKE SEITE" class="frame" id="9L-frame">
+                  <examination-table-content class="table-content" table-id="9aL" id="9aL" first-col="-4"
+                    first-col-label="(1kg)">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Bekannter Kopfschmerz</div>
+                    <div class="ex-table-header">Übertr. Schmerz</div>
+                    <div class="ex-table-row">Temporalis (post.)</div>
+                    <div class="ex-table-row">Temporalis (media.)</div>
+                    <div class="ex-table-row">Temporalis (ant.)</div>
+                    <div class="ex-table-row" skip="2">Masseter (Urspr.)</div>
+                    <div class="ex-table-row" skip="2">Masseter (Körper)</div>
+                    <div class="ex-table-row" skip="2">Masseter (Ansatz)</div>
+                  </examination-table-content>
+                  <div class="pb-3"></div>
+                  <examination-table-content class="table-content" table-id="9bL" id="9bL" first-col="-5"
+                    first-col-label="Kiefergelenk">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Übertragener Schmerz</div>
+                    <div class="ex-table-row">Lateraler Pol <b>(0.5 kg)</b> </div>
+                    <div class="ex-table-row">Um den lateralen Pol <b>(1 kg)</b></div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="9L-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="9L-info">
+                  info
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="pagebreak"> </div>
+
+      <!-- Untersuchung 10 -->
+      <div class="container-fixed mb-5 examination-page-2">
+        <form>
+          <div class="mb-3">
+            <b>10. Ergänzende Muskelschmerzen bei Palpation</b>
+          </div>
+          <div class="container-fixed">
+            <div class="row">
+              <div class="col radio-table">
+                <examination-table-frame headline="RECHTE SEITE" class="frame" id="10R-frame">
+                  <examination-table-content class="table-content" table-id="10R" id="10R" first-col="-5"
+                    first-col-label="(0.5kg)">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Übertragener Schmerz</div>
+                    <div class="ex-table-row">Regio submandibularis</div>
+                    <div class="ex-table-row">Regio retromandibularis</div>
+                    <div class="ex-table-row">Bereich des M. pteryg. lat.</div>
+                    <div class="ex-table-row">Temporalissehne</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="10R-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="10R-info">
+                  info
+                </div>
+              </div>
+              <div class="col radio-table">
+                <examination-table-frame headline="LINKE SEITE" class="frame" id="10L-frame">
+                  <examination-table-content class="table-content" table-id="10L" id="10L" first-col="-5"
+                    first-col-label="(0.5kg)">
+                    <div class="ex-table-header">Schmerz</div>
+                    <div class="ex-table-header">Bekannter Schmerz</div>
+                    <div class="ex-table-header">Übertragener Schmerz</div>
+                    <div class="ex-table-row">Regio submandibularis</div>
+                    <div class="ex-table-row">Regio retromandibularis</div>
+                    <div class="ex-table-row">Bereich des M. pteryg. lat.</div>
+                    <div class="ex-table-row">Temporalissehne</div>
+                  </examination-table-content>
+                </examination-table-frame>
+                <div class="shadow-sm p-3 mb-3 bg-warning-subtle rounded text-center custom-warning" id="10L-warning">
+                  warning
+                </div>
+                <div class="shadow-sm p-3 mb-3 bg-info-subtle rounded text-center custom-info" id="10L-info">
+                  info
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="container-fixed mb-4 noPrint">
+        
+        <div class="container-fixed mb-3 examination-input-invalid-warning" style="display: none">
+          <div class="shadow-sm p-3 bg-warning-subtle border border-warning rounded text-center">
+            Fehlende Angaben, die zu besseren Diagnosevorschlägen führen können, wurden hervorgehoben. Zum Fortfahren erneut auf Weiter klicken.
+          </div>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button class="btn btn-primary" type="button" id="examination-next-button">
+            <strong>Weiter</strong>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <div id="diagnosis">
+    <div class="container-fixed m-5 bg-body-secondary noPrint">
+
+      <div class="d-grid gap-2">
+        <button class="btn btn-primary" type="button" id="diagnosis-button">
+          <strong>Diagnosevorschläge nach DC/TMD-Kriterien erstellen</strong>
+        </button>
+      </div>
+    </div>
+
+    <div class="container-fixed m-5 p-5 shadow-sm rounded bg-body-tertiary">
+      <!-- Schmerzbezogene CMD-Diagnosen und Kopfschmerzen -->
+      <div class="text-center text-secondary container-fixed mb-4 diagnosis-tab-headline">
+        <h4>Schmerzbezogene CMD-Diagnosen und Kopfschmerzen</h4>
+      </div>
+
+      <div class="container-fixed mb-4">
+
+
+        <div class="container-fixed diagnosis-tab">
+          <div class="row">
+            <div class="col diagnosis-tab-right">
+              <diagnosis-frame headline="RECHTE SEITE">
+                <div class="accordion">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-diag1R" aria-expanded="true" aria-controls="collapse-diag1R">
+                        <strong>Diagnose</strong>
+                      </button>
+                    </h2>
+                    <div id="collapse-diag1R" class="accordion-collapse collapse show">
+                      <div class="accordion-body p-0">
+                        <ul class='list-group list-group-flush text-center' id="diag1R">
+
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-symp1R" aria-expanded="false" aria-controls="collapse-symp1R">
+                        <strong>Symptome</strong>
+                      </button>
+                    </h2>
+                    <div id="collapse-symp1R" class="accordion-collapse collapse">
+                      <div class="accordion-body p-0">
+                        <ul class='list-group list-group-flush text-center' id="symp1R">
+
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </diagnosis-frame>
+            </div>
+            <div class="col diagnosis-tab-left">
+              <diagnosis-frame headline="LINKE SEITE">
+                <div class="accordion">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-diag1L" aria-expanded="true" aria-controls="collapse-diag1L">
+                        <strong>Diagnose</strong>
+                      </button>
+                    </h2>
+                    <div id="collapse-diag1L" class="accordion-collapse collapse show">
+                      <div class="accordion-body p-0">
+                        <ul class='list-group list-group-flush text-center' id="diag1L">
+
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-symp1L" aria-expanded="false" aria-controls="collapse-symp1L">
+                        <strong>Symptome</strong>
+                      </button>
+                    </h2>
+                    <div id="collapse-symp1L" class="accordion-collapse collapse">
+                      <div class="accordion-body p-0">
+                        <ul class='list-group list-group-flush text-center' id="symp1L">
+
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </diagnosis-frame>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion shadow-sm rounded diagnosis-tab-anamnese">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapse-anam1" aria-expanded="false" aria-controls="collapse-anam1">
+              <strong>Anamnese</strong>
+            </button>
+          </h2>
+          <div id="collapse-anam1" class="accordion-collapse collapse ">
+            <div class="accordion-body p-0">
+              <ul class='list-group list-group-flush text-center' id="anam1">
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="container-fixed m-5 p-5 shadow-sm rounded bg-body-tertiary">
+      <!-- intra articular dysfunction -->
+      <div class="text-center text-secondary container-fixed mb-4 diagnosis-tab-headline">
+        <h4>Intra-articuläre Dysfunktionen</h4>
+      </div>
+
+      <div class="container-fixed diagnosis-tab">
+        <div class="row mb-3">
+          <div class="col diagnosis-tab-right">
+            <diagnosis-frame headline="RECHTE SEITE">
+              <div class="accordion">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse-diag2R" aria-expanded="true" aria-controls="collapse-diag2R">
+                      <strong>Diagnose</strong>
+                    </button>
+                  </h2>
+                  <div id="collapse-diag2R" class="accordion-collapse collapse show">
+                    <div class="accordion-body p-0">
+                      <ul class='list-group list-group-flush text-center' id="diag2R">
+
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse-symp2R" aria-expanded="false" aria-controls="collapse-symp2R">
+                      <strong>Symptome</strong>
+                    </button>
+                  </h2>
+                  <div id="collapse-symp2R" class="accordion-collapse collapse">
+                    <div class="accordion-body p-0">
+                      <ul class='list-group list-group-flush text-center' id="symp2R">
+
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </diagnosis-frame>
+          </div>
+          <div class="col diagnosis-tab-left">
+            <diagnosis-frame headline="LINKE SEITE">
+              <div class="accordion">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse-diag2L" aria-expanded="true" aria-controls="collapse-diag2L">
+                      <strong>Diagnose</strong>
+                    </button>
+                  </h2>
+                  <div id="collapse-diag2L" class="accordion-collapse collapse show">
+                    <div class="accordion-body p-0">
+                      <ul class='list-group list-group-flush text-center' id="diag2L">
+
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse-symp2L" aria-expanded="false" aria-controls="collapse-symp2L">
+                      <strong>Symptome</strong>
+                    </button>
+                  </h2>
+                  <div id="collapse-symp2L" class="accordion-collapse collapse">
+                    <div class="accordion-body p-0">
+                      <ul class='list-group list-group-flush text-center' id="symp2L">
+
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </diagnosis-frame>
+          </div>
+        </div>
+        <div class="accordion shadow-sm rounded diagnosis-tab-anamnese">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse-anam2" aria-expanded="false" aria-controls="collapse-anam2">
+                <strong>Anamnese</strong>
+              </button>
+            </h2>
+            <div id="collapse-anam2" class="accordion-collapse collapse ">
+              <div class="accordion-body p-0">
+                <ul class='list-group list-group-flush text-center' id="anam2">
+
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fixed m-5 p-5 shadow-sm rounded bg-body-tertiary">
+      <div class="text-center text-secondary container-fixed mb-4 diagnosis-tab-headline">
+        <h4>Degenerative Dysfunktionen</h4>
+      </div>
+
+      <!-- degenerative Dysfunktionen -->
+      <div class="container-fixed diagnosis-tab">
+        <div class="container-fixed mb-3">
+          <div class="row">
+            <div class="col diagnosis-tab-right">
+              <diagnosis-frame headline="RECHTE SEITE">
+                <div class="accordion">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-diag3R" aria-expanded="true" aria-controls="collapse-diag3R">
+                        <strong>Diagnose</strong>
+                      </button>
+                    </h2>
+                    <div id="collapse-diag3R" class="accordion-collapse collapse show">
+                      <div class="accordion-body p-0">
+                        <ul class='list-group list-group-flush text-center' id="diag3R">
+
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-symp3R" aria-expanded="false" aria-controls="collapse-symp3R">
+                        <strong>Symptome</strong>
+                      </button>
+                    </h2>
+                    <div id="collapse-symp3R" class="accordion-collapse collapse">
+                      <div class="accordion-body p-0">
+                        <ul class='list-group list-group-flush text-center' id="symp3R">
+
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </diagnosis-frame>
+            </div>
+            <div class="col diagnosis-tab-left">
+              <diagnosis-frame headline="LINKE SEITE">
+                <div class="accordion">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-diag3L" aria-expanded="true" aria-controls="collapse-diag3L">
+                        <strong>Diagnose</strong>
+                      </button>
+                    </h2>
+                    <div id="collapse-diag3L" class="accordion-collapse collapse show">
+                      <div class="accordion-body p-0">
+                        <ul class='list-group list-group-flush text-center' id="diag3L">
+
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-symp3L" aria-expanded="false" aria-controls="collapse-symp3L">
+                        <strong>Symptome</strong>
+                      </button>
+                    </h2>
+                    <div id="collapse-symp3L" class="accordion-collapse collapse">
+                      <div class="accordion-body p-0">
+                        <ul class='list-group list-group-flush text-center' id="symp3L">
+
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </diagnosis-frame>
+            </div>
+          </div>
+        </div>
+        <div class="accordion shadow-sm rounded diagnosis-tab-anamnese">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse-anam3" aria-expanded="false" aria-controls="collapse-anam3">
+                <strong>Anamnese</strong>
+              </button>
+            </h2>
+            <div id="collapse-anam3" class="accordion-collapse collapse ">
+              <div class="accordion-body p-0">
+                <ul class='list-group list-group-flush text-center' id="anam3">
+
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="custom.js"></script>
+  <script src=index.js></script>
+
+  <!-- bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
+    </script>
+
+</body>
+
+</html>
