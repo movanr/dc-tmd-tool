@@ -37,20 +37,6 @@ body {
     /*padding-top: 15px;*/
 }
 
-.tab {
-    /* Hide all tabs by default: */
-    display: none;
-    /*padding-top: 15px;
-    padding-bottom: 15px;*/
-}
-
-.diagnosis-tab {
-  display: none;
-}
-
-.diagnosis-tab-anamnese {
-  display: none;
-}
 
 
 .custom-warning {
@@ -69,7 +55,6 @@ body {
 }
 
 #patientForm {
-  display: none;
   margin: auto;
   max-width: 32cm;
   min-width: 8cm;

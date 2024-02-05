@@ -3,8 +3,6 @@
 /*                        PATIENT RECEPTION PRCESS                                
 */
 
-const QUESTION_COUNT = 23;
-
 // phq radio buttons
 const phq1radioButtons = document.querySelectorAll('input[name="phq-4-radio-1"]');
 const phq2radioButtons = document.querySelectorAll('input[name="phq-4-radio-2"]');
@@ -25,12 +23,6 @@ const gcp8SelectField = document.getElementById("gcp8");
 /*                              UI elements                                         
 */
 
-const codeInputForm = document.getElementById("code-input-form");
-
-const codeInput = document.getElementById("codeInput");
-
-const codeSubmitButton = document.getElementById("codeSubmit");
-
 const symptomsHeadline = document.getElementsByClassName("symptom");
 
 const tabButton1 = document.getElementById("tab-button-1");
@@ -41,153 +33,8 @@ const tabButton3 = document.getElementById("tab-button-3");
 
 const printButton = document.getElementById('print-button');
 
-const generateReportButton = document.getElementById('generate-report-button');
-
-const showAllQuestionsButton = document.getElementById('show-all-questions');
-
 /* ------------------------------------------------------------------------------------*/
-/*                          navbar alignment                                           */
-
-const navbarSpaceRight = document.getElementById("navbar-space-right");
-
-const homeButton = document.getElementById("home-button");
-
-const navbarDropdown1 = document.getElementById("navbar-dropdown1");
-
-navbarSpaceRight.style.width = homeButton.offsetWidth - navbarDropdown1.offsetWidth;
-
-/* ------------------------------------------------------------------------------------*/
-/*                              UI functionality                                       
-*/
-
-var hideReception = false;
-
-printButton.addEventListener('click', printPrintableContent);
-
-generateReportButton.addEventListener('click', generateReport);
-
-showAllQuestionsButton.addEventListener('click', () => {
-  hideReception = true;
-  showPatientForm();
-  showAllQuestions();
-  document.getElementById("reception").style.display = "none";
-  hideNotifications();
-});
-
-tabButton1.addEventListener('click', tabButton1Event);
-
-tabButton2.addEventListener('click', tabButton2Event);
-
-tabButton3.addEventListener('click', tabButton3Event);
-
-
-function tabButton1Event() {
-  // appearence
-  if (tabButton1.className.includes("active")) {
-    return;
-  }
-  tabButton1.className += " active";
-  tabButton2.className = tabButton2.className.replace("active", '');
-  tabButton3.className = tabButton3.className.replace("active", '');
-
-  // functionality 
-  hideExaminationForm();
-  showPatientForm();
-  showAnsweredQuestions();
-  if (!hideReception) {
-    document.getElementById("reception").style.display = "block";
-  }
-  document.getElementById("diagnosis").style.display = "none";
-  document.getElementById("navbar-dropdown2").style.display = "none";
-  document.getElementById("navbar-dropdown1").style.display = "block";
-}
-
-function tabButton2Event() {
-  // appearence
-  tabButton1.className = tabButton1.className.replace("active", '');
-  if (!tabButton2.className.includes("active")) {
-    tabButton2.className += " active";
-  }
-  tabButton3.className = tabButton3.className.replace("active", '');
-
-  // functionality 
-  document.getElementById("reception").style.display = "none";
-  hidePatientForm();
-  showExaminationForm();
-  document.getElementById("diagnosis").style.display = "none";
-  document.getElementById("navbar-dropdown2").style.display = "none";
-  document.getElementById("navbar-dropdown1").style.display = "block";
-}
-
-function tabButton3Event() {
-  // appearence
-  tabButton1.className = tabButton1.className.replace("active", '');
-  tabButton2.className = tabButton2.className.replace("active", '');
-  if (!tabButton3.className.includes("active")) {
-    tabButton3.className += " active";
-  }
-
-  // functionality
-  document.getElementById("reception").style.display = "none";
-  hidePatientForm();
-  hideExaminationForm();
-  document.getElementById("diagnosis").style.display = "block";
-  document.getElementById("navbar-dropdown2").style.display = "block";
-  document.getElementById("navbar-dropdown1").style.display = "none";
-}
-
-
-codeSubmitButton.addEventListener('click', async () => {
-  // check input validity
-  if (!validateCodeInput()) {
-    return;
-  }
-
-  // get patient form data 
-  const patientRecord = await getPatientRecord(codeInput.value);
-
-  try {
-    // update state
-    patientRecordLocal['patientFormData'] = patientRecord.PatientForm;
-
-    // update state
-    hideReception = true;
-    disableInputFields();
-
-    // update UI
-    document.getElementById("reception").style.display = "none";
-    hideNotifications();
-    showCodeDisplay();
-
-    setAnsweredQuestions(patientRecord.PatientForm);
-    // update UI
-    setPatientFormAnswers(patientRecord.PatientForm);
-    showPatientForm();
-    showAnamnesisSummary();
-  }
-  catch (error) {
-    console.log(error);
-    // update state
-    hideReception = false;
-    // update UI
-    hidePatientForm();
-    hideNotifications();
-    document.getElementById("reception").style.display = "block";
-    document.getElementById("get-record-failure").style.display = "block";
-    showCodeInputForm();
-  }
-
-});
-
-/* -------------------------------- print / export --------------------------------------*/
-
-function printPrintableContent() {
-  window.print();
-}
-
-// this is the data structure of the diagnosis data. it will be set when the diagnosis button
-// is pressed and can be used here to generate the report. 
-// The 'generate report button' is disabled until the diagnosis button was pressed.
+/* diagnosis data */ 
 
 const diagnosisData = {
   painBasedAnamnesis: {
@@ -228,433 +75,87 @@ const diagnosisData = {
   },
 };
 
-/* get current date for the report and stuff */
-/* credit: https://stackoverflow.com/a/4929629 */
-function getCurrentDate() {
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, '0');
-  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  var yyyy = today.getFullYear();
+/* ------------------------------------------------------------------------------------*/
+/*                          navbar alignment                                           */
 
-  today = dd + '.' + mm + '.' + yyyy;
-  return today;
+const navbarSpaceRight = document.getElementById("navbar-space-right");
+
+const homeButton = document.getElementById("home-button");
+
+const navbarDropdown1 = document.getElementById("navbar-dropdown1");
+
+navbarSpaceRight.style.width = homeButton.offsetWidth - navbarDropdown1.offsetWidth;
+
+/* ------------------------------------------------------------------------------------*/
+/*                              UI functionality                                       
+*/
+
+
+printButton.addEventListener('click', printPrintableContent);
+
+tabButton1.addEventListener('click', tabButton1Event);
+
+tabButton2.addEventListener('click', tabButton2Event);
+
+tabButton3.addEventListener('click', tabButton3Event);
+
+
+function tabButton1Event() {
+  // appearence
+  if (tabButton1.className.includes("active")) {
+    return;
+  }
+  tabButton1.className += " active";
+  tabButton2.className = tabButton2.className.replace("active", '');
+  tabButton3.className = tabButton3.className.replace("active", '');
+
+  // functionality 
+  document.getElementById("patientForm").style.display = "block";
+  document.getElementById("examination").style.display = "none";
+  document.getElementById("diagnosis").style.display = "none";
+  document.getElementById("navbar-dropdown2").style.display = "none";
+  document.getElementById("navbar-dropdown1").style.display = "block";
 }
 
-function generateReport() {
+function tabButton2Event() {
+  // appearence
+  tabButton1.className = tabButton1.className.replace("active", '');
+  if (!tabButton2.className.includes("active")) {
+    tabButton2.className += " active";
+  }
+  tabButton3.className = tabButton3.className.replace("active", '');
 
-  /*---------------------------------------------------------------------------*/
-  // contains all the lines of the document
-  // each paragraph is one line
-  const paragraphs = [];
-  /*---------------------------------------------------------------------------*/
-  /*                               HEADER                                      */
-  /*---------------------------------------------------------------------------*/
-  const headerParagraphs = [
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "KARES Zahnärzte – Grumbachtalweg 9 – 66121 Saarbrücken",
-          font: "Arial",
-        })
-      ],
-    }),
-    new docx.Paragraph({ children: [] }), // new line
-    new docx.Paragraph({ children: [] }), // new line
-    new docx.Paragraph({
-      alignment: docx.AlignmentType.RIGHT,
-      children: [
-        new docx.TextRun({
-          text: getCurrentDate(),
-          bold: false,
-          font: "Arial",
-        })
-      ]
-    }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "An ---",
-          font: "Arial",
-          bold: false,
-        }),],
-    }),
-    new docx.Paragraph({ children: [] }), // new line
-    new docx.Paragraph({ children: [] }), // new line
-    new docx.Paragraph({
-      alignment: docx.AlignmentType.CENTER,
-      children: [
-        new docx.TextRun({
-          text: "Zahnärztlicher Untersuchungsbericht",
-          bold: false,
-          font: "Arial",
-        })
-      ]
-    }),
-    new docx.Paragraph({ children: [] }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "Sehr geehrte ---,",
-          font: "Arial",
-        })
-      ]
-    }),
-    new docx.Paragraph({ children: [] }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "Anbei finden sich die Ergebnisse unserer Untersuchung vom " + getCurrentDate() + ".",
-          font: "Arial",
-        })
-      ]
-    }),
-  ];
+  // functionality 
+  document.getElementById("patientForm").style.display = "none";
+  document.getElementById("examination").style.display = "block";
+  document.getElementById("diagnosis").style.display = "none";
+  document.getElementById("navbar-dropdown2").style.display = "none";
+  document.getElementById("navbar-dropdown1").style.display = "block";
+}
 
-  /*---------------------------------------------------------------------------*/
-  /*                          1. DIAGNOSE                                      */
-  /*---------------------------------------------------------------------------*/
-  const diagnosisHeadline = [
-
-    new docx.Paragraph({ children: [] }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "1. Diagnosen",
-          font: "Arial",
-          bold: true,
-        }),
-        new docx.TextRun({
-          text: " (DC/TMD und ICD-10)",
-          font: "Arial",
-          size: "8pt",
-        })
-      ]
-    }),
-  ];
-
-  const diagnosisExampleParagraphs = [
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "+ Myofasziale Schmerzen der Nacken-, Schultermuskulatur (M79.18))",
-          font: "Arial",
-          //bullet: {level: 0}
-        })
-      ]
-    }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "+ Insomnie (G47.0)",
-          font: "Arial",
-        })
-      ]
-    }),
-  ];
-
-
-  const diagnosisParagraphs = [];
-
-  // loop through keys of diagnosisData 
-  for (const key in diagnosisData) {
-    // skip if does not have diagnoses
-    if (!("diagnoses" in diagnosisData[key])) {
-      continue;
-    }
-    for (const diagnosisElement of diagnosisData[key].diagnoses) {
-      if (diagnosisElement.class.includes("diagnosis") && !(diagnosisElement.class.includes("confirm"))) {
-        // add diagnosis descriptions
-        diagnosisParagraphs.push(
-          new docx.Paragraph({
-            children: [
-              new docx.TextRun({
-                text: "+ " + diagnosisElement.description + (key.includes("Left") ? ", Kaumuskeln linke Seite" : ", Kaumuskeln rechte Seite"),
-                font: "Arial",
-              })
-            ]
-          })
-        );
-      }
-    }
+function tabButton3Event() {
+  // appearence
+  tabButton1.className = tabButton1.className.replace("active", '');
+  tabButton2.className = tabButton2.className.replace("active", '');
+  if (!tabButton3.className.includes("active")) {
+    tabButton3.className += " active";
   }
 
-  diagnosisParagraphs.push(new docx.Paragraph({ children: [] })); // new line
-
-  /*var dctmdHeadlinWritten = false
-  // loop through keys of diagnosisData again for the symptoms
-  for(const key in diagnosisData) {
-    // skip if does not have symptoms
-    if(!("symptoms" in diagnosisData[key])) {
-      continue;
-    }
-    // skip if it is an anamnesis 
-    if(key.includes("Anamnesis")) {
-      continue;
-    }
-    for(const element of diagnosisData[key].symptoms) {
-      // if there is a positive symptom then add a 
-      // symptoms headline to the DC/TMD diagnosis paragraph
-      if(element.class=="positive") {
-        if(!dctmdHeadlinWritten) {
-          diagnosisParagraphs.push(new docx.Paragraph({
-            children: [
-              new docx.TextRun({
-                text: "DC/TMD Symptome",
-                font: "Arial",
-                bold: true,
-              })
-            ]
-          }));
-          dctmdHeadlinWritten = true;
-        }
-        // add symptoms descriptions
-        diagnosisParagraphs.push(
-          new docx.Paragraph({
-            children: [
-              new docx.TextRun({
-                text: "+ " + element.description,
-                font: "Arial",
-              })
-            ]
-          })
-        );
-      }
-    }
-  }*/
-
-
-  /*---------------------------------------------------------------------------*/
-  /*                          2. SYMPTOME                                      */
-  /*---------------------------------------------------------------------------*/
-  const symptomsHeadline = [
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "2. Symptome",
-          font: "Arial",
-          bold: true,
-        }),
-        new docx.TextRun({
-          text: " (Intensität nach der elfstufigen Numerischen Rating Skala NRS)",
-          font: "Arial",
-          size: "8pt",
-        })
-      ]
-    }),
-  ];
-
-  const symptomsParagraphs = [];
-  // line break
-  symptomsParagraphs.push(new docx.Paragraph({ children: [] })); // new line
-
-
-  /*---------------------------------------------------------------------------*/
-  /*                          3. VORGESCHICHTE                                 */
-  /*---------------------------------------------------------------------------*/
-
-  const anamnesisHeadline = [
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "3. Vorgeschichte",
-          font: "Arial",
-          bold: true,
-        })
-      ]
-    }),
-  ];
-
-  dctmdHeadlinWritten = false;
-  const anamnesisParagraphs = [];
-
-  /* check if anamnesis is positive */
-  /*if(diagnosisData.painBasedAnamnesis.class == "positive") {
-    if(!dctmdHeadlinWritten) {
-      anamnesisParagraphs.push(new docx.Paragraph({
-        children: [
-          new docx.TextRun({
-            text: "DC/TMD Anamnese",
-            font: "Arial",
-            bold: true,
-          })
-        ]
-      }));
-      dctmdHeadlinWritten = true;
-    }
-    for(const symptom of diagnosisData.painBasedAnamnesis.symptoms) {
-      anamnesisParagraphs.push(
-        new docx.Paragraph({
-          children: [
-            new docx.TextRun({
-              text: "+ " + symptom.description,
-              font: "Arial",
-            })
-          ]
-        })
-      );
-    }
-  }*/
-
-  anamnesisParagraphs.push(new docx.Paragraph({ children: [] })); // new line
-
-
-  /*---------------------------------------------------------------------------*/
-  /*            4. Klinische und radiologische Untersuchung                    */
-  /*---------------------------------------------------------------------------*/
-  const radiologicExaminationHeadline = [
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "4. Klinische und radiologische Untersuchung",
-          font: "Arial",
-          bold: true,
-        })
-      ]
-    }),
-  ];
-
-  const radiologicExaminationParagraphs = [
-    new docx.Paragraph({ children: [] }), // new line
-  ];
-
-  /*---------------------------------------------------------------------------*/
-  /*              5. Funktionelle Untersuchung                                 */
-  /*---------------------------------------------------------------------------*/
-
-  const functionalExaminationHeadline = [
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "5. Funktionelle Untersuchung",
-          font: "Arial",
-          bold: true,
-        })
-      ]
-    }),
-  ];
-
-
-  const functionalExaminationParagraphs = [
-    new docx.Paragraph({ children: [] }), // new line
-  ];
-
-  /*---------------------------------------------------------------------------*/
-  /*                 6. Therapieempfehlungen                                   */
-  /*---------------------------------------------------------------------------*/
-  const therapySuggestionHeadline = [
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "6. Therapieempfehlungen",
-          font: "Arial",
-          bold: true,
-        })
-      ]
-    }),
-  ];
-
-  const therapySuggestionParagraphs = [
-    new docx.Paragraph({ children: [] }), // new line
-  ];
-
-  /*---------------------------------------------------------------------------*/
-  /*                       FOOTER                                              */
-  /*---------------------------------------------------------------------------*/
-  const footerParagraphs = [
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "Mit freundlichen Grüßen, ",
-          font: "Arial",
-        })
-      ]
-    }),
-    new docx.Paragraph({ children: [] }),
-    new docx.Paragraph({ children: [] }),
-    new docx.Paragraph({ children: [] }),
-    new docx.Paragraph({ children: [] }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun("___________________________                ______________________________             ")
-      ]
-    }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "Alexandra Kares-Vrincianu                    Horst Kares",
-          font: "Arial",
-        })
-      ]
-    }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "Dr. med. dent. (Deutschland)                                Docteur en Chirurgie Dentaire (Frankreich)",
-          font: "Arial",
-          size: "8pt",
-        })
-      ]
-    }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "BChd (Leeds/GB)                                                  Diplomate American Board of Orofacial Pain (USA)",
-          font: "Arial",
-          size: "8pt"
-        })
-      ]
-    }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "Akkreditiertes Ausbildungszentrum zum Spezialisten für Funktionsdiagnostik und -therapie (DGFDT)",
-          font: "Arial",
-          size: "8pt"
-        })
-      ]
-    }),
-    new docx.Paragraph({
-      children: [
-        new docx.TextRun({
-          text: "Zertifizierte Zahnärzte der Deutschen Gesellschaft für Zahnärztlichen Schlafmedizin (DGZS)",
-          font: "Arial",
-          size: "8pt"
-        })
-      ]
-    }),
-  ];
-
-
-  const doc = new docx.Document({
-    sections: [
-      {
-        properties: {},
-        children: paragraphs.concat(
-          headerParagraphs,
-          diagnosisHeadline,
-          diagnosisParagraphs,
-          symptomsHeadline,
-          symptomsParagraphs,
-          anamnesisHeadline,
-          anamnesisParagraphs,
-          radiologicExaminationHeadline,
-          radiologicExaminationParagraphs,
-          functionalExaminationHeadline,
-          functionalExaminationParagraphs,
-          therapySuggestionHeadline,
-          therapySuggestionParagraphs,
-          footerParagraphs,
-        )
-      }
-    ]
-  });
-
-
-  docx.Packer.toBlob(doc).then((blob) => {
-    saveAs(blob, "Arztbrief.docx");
-    console.log("Document created successfully");
-  });
+  // functionality
+  document.getElementById("patientForm").style.display = "none";
+  document.getElementById("examination").style.display = "none";
+  document.getElementById("diagnosis").style.display = "block";
+  document.getElementById("navbar-dropdown2").style.display = "block";
+  document.getElementById("navbar-dropdown1").style.display = "none";
 }
+
+
+/* -------------------------------- print / export --------------------------------------*/
+
+function printPrintableContent() {
+  window.print();
+}
+
 
 /* ------------------------------------------------------------------------------------*/
 /*                              State management         
@@ -662,20 +163,8 @@ function generateReport() {
 const phqTotalValueField = document.getElementById("phq-total-value-field");
 
 // patient data
-var patientRecordLocal = {};
+const patientRecordLocal = {};
 
-// not all questions have to be answered
-// only want to show answered questions
-const answeredQuestions = [];
-
-function setAnsweredQuestions(patientFormData) {
-  for (let i = 1; i <= 14 + 1 + 8; i++) {
-    if (i in patientFormData) {
-      // if question i from the patient form has been answered
-      answeredQuestions.push(i);
-    }
-  }
-}
 
 function setPatientFormDataFromInput() {
   patientRecordLocal['patientFormData'] = {
@@ -726,96 +215,6 @@ function setPatientFormDataFromInput() {
   }
 }
 
-function setPatientFormAnswers(patientFormData) {
-  // set patient question form input values 
-  // called after patient record was pulled from the API
-  if (answeredQuestions.includes(1)) {
-    document.getElementById("answer1_0").checked = (patientFormData[1] == 0);
-    document.getElementById("answer1_1").checked = (patientFormData[1] == 1);
-  }
-  if (answeredQuestions.includes(2)) {
-    document.getElementById("answer2_years").value = patientFormData[2].years;
-    document.getElementById("answer2_months").value = patientFormData[2].months;
-  }
-  if (answeredQuestions.includes(3)) {
-    document.getElementById("answer3_0").checked = (patientFormData[3] == 0);
-    document.getElementById("answer3_1").checked = (patientFormData[3] == 1);
-    document.getElementById("answer3_2").checked = (patientFormData[3] == 2);
-  }
-  if (answeredQuestions.includes(4)) {
-    document.getElementById("answer4_A_0").checked = (patientFormData[4].A == 0);
-    document.getElementById("answer4_A_1").checked = (patientFormData[4].A == 1);
-    document.getElementById("answer4_B_0").checked = (patientFormData[4].B == 0);
-    document.getElementById("answer4_B_1").checked = (patientFormData[4].B == 1);
-    document.getElementById("answer4_C_0").checked = (patientFormData[4].C == 0);
-    document.getElementById("answer4_C_1").checked = (patientFormData[4].C == 1);
-    document.getElementById("answer4_D_0").checked = (patientFormData[4].D == 0);
-    document.getElementById("answer4_D_1").checked = (patientFormData[4].D == 1);
-  }
-  if (answeredQuestions.includes(5)) {
-    document.getElementById("answer5_0").checked = (patientFormData[5] == 0);
-    document.getElementById("answer5_1").checked = (patientFormData[5] == 1);
-  }
-  if (answeredQuestions.includes(6)) {
-    document.getElementById("answer6_years").value = patientFormData[6].years;
-    document.getElementById("answer6_months").value = patientFormData[6].months;
-  }
-  if (answeredQuestions.includes(7)) {
-    document.getElementById("answer7_A_0").checked = (patientFormData[7].A == 0);
-    document.getElementById("answer7_A_1").checked = (patientFormData[7].A == 1);
-    document.getElementById("answer7_B_0").checked = (patientFormData[7].B == 0);
-    document.getElementById("answer7_B_1").checked = (patientFormData[7].B == 1);
-    document.getElementById("answer7_C_0").checked = (patientFormData[7].C == 0);
-    document.getElementById("answer7_C_1").checked = (patientFormData[7].C == 1);
-    document.getElementById("answer7_D_0").checked = (patientFormData[7].D == 0);
-    document.getElementById("answer7_D_1").checked = (patientFormData[7].D == 1);
-  }
-  if (answeredQuestions.includes(8)) {
-    document.getElementById("answer8_0").checked = (patientFormData[8] == 0);
-    document.getElementById("answer8_1").checked = (patientFormData[8] == 1);
-  }
-  if (answeredQuestions.includes(9)) {
-    document.getElementById("answer9_0").checked = (patientFormData[9] == 0);
-    document.getElementById("answer9_1").checked = (patientFormData[9] == 1);
-  }
-  if (answeredQuestions.includes(10)) {
-    document.getElementById("answer10_0").checked = (patientFormData[10] == 0);
-    document.getElementById("answer10_1").checked = (patientFormData[10] == 1);
-  }
-  if (answeredQuestions.includes(11)) {
-    document.getElementById("answer11_0").checked = (patientFormData[11] == 0);
-    document.getElementById("answer11_1").checked = (patientFormData[11] == 1);
-  }
-  if (answeredQuestions.includes(12)) {
-    document.getElementById("answer12_0").checked = (patientFormData[12] == 0);
-    document.getElementById("answer12_1").checked = (patientFormData[12] == 1);
-  }
-  if (answeredQuestions.includes(13)) {
-    document.getElementById("answer13_0").checked = (patientFormData[13] == 0);
-    document.getElementById("answer13_1").checked = (patientFormData[13] == 1);
-  }
-  if (answeredQuestions.includes(14)) {
-    document.getElementById("answer14_0").checked = (patientFormData[14] == 0);
-    document.getElementById("answer14_1").checked = (patientFormData[14] == 1);
-  }
-  document.getElementById("phq-4-radio-1_" + patientFormData[15][1]).checked = true;
-  document.getElementById("phq-4-radio-2_" + patientFormData[15][2]).checked = true;
-  document.getElementById("phq-4-radio-3_" + patientFormData[15][3]).checked = true;
-  document.getElementById("phq-4-radio-4_" + patientFormData[15][4]).checked = true;
-  document.getElementById("phq-total-value-field").innerHTML =
-    Number(patientFormData[15][1]) +
-    Number(patientFormData[15][2]) +
-    Number(patientFormData[15][3]) +
-    Number(patientFormData[15][4]);
-  document.getElementById("gcp1").value = patientFormData[16];
-  document.getElementById("gcp2").value = patientFormData[17];
-  document.getElementById("gcp3").value = patientFormData[18];
-  document.getElementById("gcp4").value = patientFormData[19];
-  document.getElementById("gcp5").value = patientFormData[20];
-  document.getElementById("gcp6").value = patientFormData[21];
-  document.getElementById("gcp7").value = patientFormData[22];
-  document.getElementById("gcp8").value = patientFormData[23];
-}
 
 function disableInputFields() {
   const patientFormElement = document.getElementById("patientForm");
@@ -828,149 +227,6 @@ function disableInputFields() {
     selectElement.setAttribute("disabled", "");
   }
 }
-
-/* ------------------------------------------------------------------------------------*/
-/*                              Update UI
-*/
-
-function showAnsweredQuestions() {
-  for (let i = 0; i < answeredQuestions.length; i++) {
-    showQuestionTab(answeredQuestions[i]);
-  }
-}
-
-function showAllQuestions() {
-  for (let i = 1; i <= QUESTION_COUNT; i++) {
-    showQuestionTab(i);
-  }
-}
-
-function showQuestionTab(questionNumber) {
-  document.getElementById("question" + questionNumber).style.display = "block";
-  // show symptom headline
-  if (questionNumber >= 1 && questionNumber <= 4) {
-    showSymptom(0);
-    document.getElementById("anam-headline-1").style.display = "block";
-  }
-  if (questionNumber >= 5 && questionNumber <= 7) {
-    showSymptom(1);
-  }
-  if (questionNumber == 8) {
-    showSymptom(2);
-  }
-  if (questionNumber >= 9 && questionNumber <= 12) {
-    showSymptom(3);
-  }
-  if (questionNumber == 13 || questionNumber == 14) {
-    showSymptom(4);
-  }
-  document.getElementById("anam-headline-2").style.display = "block";
-  document.getElementById("anam-headline-3").style.display = "block";
-}
-
-function hideQuestionTab(questionNumber) {
-  document.getElementById("question" + questionNumber).style.display = "none";
-  hideAllSymptoms();
-}
-
-function hideAllQuestionTabs() {
-  for (let i = 1; i <= 14; i++) {
-    hideQuestionTab(i);
-  }
-}
-
-function showCodeDisplay() {
-  document.getElementById("code-display").style.display = "block";
-  document.getElementById("code-display2").style.display = "block";
-  document.getElementById("code-display-field").innerHTML = codeInput.value;
-  document.getElementById("code-display-field2").innerHTML = codeInput.value;
-
-}
-
-function hideCodeInputForm() {
-  codeInputForm.style.display = "none";
-}
-
-function showCodeInputForm() {
-  codeInputForm.style.display = "block";
-}
-
-function showPatientForm() {
-  document.getElementById("patientForm").style.display = "block";
-  showAnsweredQuestions();
-}
-
-function hidePatientForm() {
-  document.getElementById("patientForm").style.display = "none";
-  //hideAllQuestionTabs();
-}
-
-function hideExaminationForm() {
-  document.getElementById("examination").style.display = "none";
-}
-
-function showExaminationForm() {
-  document.getElementById("examination").style.display = "block";
-}
-
-function showSymptom(index) {
-  symptomsHeadline[index].style.display = "block";
-}
-
-function hideAllSymptoms() {
-  for (let i = 0; i < symptomsHeadline.length; i++) {
-    symptomsHeadline[i].style.display = "none";
-  }
-}
-
-function hideNotifications() {
-  document.getElementById("get-record-failure").style.display = "none";
-}
-
-/* ------------------------------------------------------------------------------------*/
-/*                              Input validation
-*/
-function validateCodeInput() {
-  if (!codeInputForm.className.includes("was-validated")) {
-    codeInputForm.className += " was-validated";
-  }
-  if (!codeInput.validity.valid) {
-    return false;
-  }
-  if (codeInputForm.className.includes("was-validated")) {
-    codeInputForm.className -= " was-validated";
-  }
-  return true;
-}
-
-
-/* ------------------------------------------------------------------------------------*/
-/*                              API requests
-*/
-
-// GET request to the AWS Gateway API with the patientId as query param
-// Fetch API: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-async function getPatientRecord(patientId) {
-  // Example test code jGmLGWF2
-  // fetch patient record and update state
-  const url = (
-    // credit: https://stackoverflow.com/a/58437909
-    'https://zsphmf6dd6.execute-api.eu-central-1.amazonaws.com/beta/get-record?' +
-    new URLSearchParams({ patientId: patientId }).toString()
-  );
-  try {
-    const response = await fetch(url);
-    const result = await response.json();
-    console.log("Success", result.Response);
-    return result.Response;
-
-  } catch (error) {
-    console.log("Error", error);
-  }
-}
-
-
-
 
 
 /* ------------------------------------------------------------------------------------*/
@@ -1181,8 +437,8 @@ for (const key in tableRadioColumns) {
           }
         }
       }
-      if(currentExaminationPage == 3) {
-        let isValid = handleExaminationSubmit()
+      if(currentExaminationStep == 3) {
+        let isValid = validateExaminationSubmit()
         if(isValid) {
           const components = document.getElementsByClassName("examination-input-invalid-warning");
           for(const component of components) {
@@ -1285,14 +541,15 @@ for (key in checkGroupsRequired) {
 // event listener for validation button
 const examinationNextButton = document.getElementById("examination-next-button");
 const examinationPage2 = document.getElementsByClassName("examination-page-2");
-let currentExaminationPage = 1;
+let currentExaminationStep = 1; // current examination step
 let preExaminationLeft = {};
 let preExaminationRight = {};
 
 examinationNextButton.addEventListener('click', () => {
-  let isValidPage1 = true;
-  let isValidPage2 = true;
+  let isValidPage1 = true; // Voruntersuchung U1a
+  let isValidPage2 = true; // Untersuchung
   const components = document.getElementsByClassName("examination-input-invalid-warning");
+  // check if U1a is valid
   for (key in checkGroupsRequired) {
     const group = checkGroupsRequired[key];
     const checks = group.checks;
@@ -1305,7 +562,7 @@ examinationNextButton.addEventListener('click', () => {
     if (!isValid) {
       setFrameBg(group.frameBg, 'bg-danger-subtle');
       group.customWarning.style.display = 'block';
-      isValidPage1 = false;
+      isValidPage1 = false; // Voruntersuchung invalid
     }
     else {
       setFrameBg(group.frameBg, 'bg-success-subtle');
@@ -1313,19 +570,25 @@ examinationNextButton.addEventListener('click', () => {
     }
   }
 
-  if (currentExaminationPage == 1) {
+  // if U1a is valid then proceed to next examination step
+  if (currentExaminationStep == 1) {
     if (isValidPage1) {
-      handlePreExaminationSubmit();
-      currentExaminationPage++;
+      validatePreExaminationSubmit(); // show next examination steps
+      examinationNextButton.innerHTML = "Diagnosevorschläge nach DC/TMD-Kriterien erstellen"; // change button text
+      currentExaminationStep++;     
       for (const elemt of examinationPage2) {
         elemt.style.display = "block";
       }
     }
   }
-  else if (currentExaminationPage == 2) {
-    isValidPage2 = handleExaminationSubmit();
+  
+  // step 2 of the examination process
+  else if (currentExaminationStep == 2) {
+    // check if examination is valid
+    isValidPage2 = validateExaminationSubmit();
     if (isValidPage1 && isValidPage2) {
       tabButton3Event();
+      getDiagnosis();
       tabButton3.classList.remove("disabled");
       document.getElementById("tab-button-2-arrow").classList.remove("disabled");
       for (const component of components) {
@@ -1333,6 +596,7 @@ examinationNextButton.addEventListener('click', () => {
       }
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
+    // if U1a is not valid then scroll to the top
     else if (!isValidPage1) {
       window.scrollTo({ top: 0, left: 0 });
     }
@@ -1341,11 +605,13 @@ examinationNextButton.addEventListener('click', () => {
         component.style.display = "block";
       }
       window.scrollTo(0, document.body.scrollHeight);
-      currentExaminationPage++;
+      currentExaminationStep++;
     }
   }
-  else if(currentExaminationPage == 3) {
+  // if the second examination step is not valid the second time, then proceed anyway
+  else if(currentExaminationStep == 3) {
     tabButton3Event();
+    getDiagnosis();
     tabButton3.classList.remove("disabled");
     document.getElementById("tab-button-2-arrow").classList.remove("disabled");
     if (isValidPage1 && isValidPage2) {
@@ -1371,7 +637,7 @@ function checkExaminationInput() {
   return isValid;
 }
 
-function handlePreExaminationSubmit() {
+function validatePreExaminationSubmit() {
   const preExaminationData = getExaminationFormData();
   const examinationFormDataLeft = getExaminationDataSide(preExaminationData, 'L');
   const examinationFormDataRight = getExaminationDataSide(preExaminationData, 'R');
@@ -1392,22 +658,22 @@ function handlePreExaminationSubmit() {
   //const painBasedAnamnesis = getPainBasedAnamnesis(SF);
   //const intraArticularAnamnesis = getIntraArticularAnamnesis(SF);
   //const degDysAnamnesis = getDegDysAnamnesis(SF);
-  handlePreExaminationSubmitSide(SF, U_left, 'L');
-  handlePreExaminationSubmitSide(SF, U_right, 'R');
+  validatePreExaminationSubmitSide(SF, U_left, 'L');
+  validatePreExaminationSubmitSide(SF, U_right, 'R');
 }
 
-function handleExaminationSubmit() {
+function validateExaminationSubmit() {
   let isValid = true;
-  if(!handleExaminationSubmitSide('L')) {
+  if(!validateExaminationSubmitSide('L')) {
     isValid = false;
   }
-  if(!handleExaminationSubmitSide('R')) {
+  if(!validateExaminationSubmitSide('R')) {
     isValid = false;
   }
   return isValid
 }
 
-function handlePreExaminationSubmitSide(SF, U, side) {
+function validatePreExaminationSubmitSide(SF, U, side) {
   const pain = SF[1] && SF[3] && (SF[4].A || SF[4].B || SF[4].C || SF[4].D);
   const confirmedMusclePain = pain && (U['1a'][1] || U['1a'][2] || U['1a'][4] || U['1a'][5]);
   const confirmedJointPain = pain && (U['1a'][3]);
@@ -1447,7 +713,7 @@ function handlePreExaminationSubmitSide(SF, U, side) {
   }
 }
 
-function handleExaminationSubmitSide(side) {
+function validateExaminationSubmitSide(side) {
 
   let isValid = true;
   for (const tableId in radioTables) {
@@ -1505,6 +771,7 @@ for (const button of submitAnamnesisButtons) {
 
   button.addEventListener('click', () => {
     showAnamnesisSummary();
+    disableInputFields();
     tabButton2Event();
     tabButton2.classList.remove("disabled");
     document.getElementById("tab-button-1-arrow").classList.remove("disabled");
@@ -1530,16 +797,6 @@ function showAnamnesisSummary() {
   const summaryAnamnesisInfos = document.getElementsByClassName("summary-anamnesis-info");
 
   const degree = SF['gcs'].degree;
-  /*
-  for (const element of phqElements) {
-    element.innerHTML = SF.phq;
-  }
-  for (const element of gcsElements) {
-    element.innerHTML = '';
-    element.innerHTML += `<b>Grad ${toRomanPseudo(degree)} (${degreeDefinition(degree)})</b><br>` ;
-    element.innerHTML += `(Beeintr. Punkte: ${SF['gcs'].BP}${degree < 3 ? ` , charakt. Schmerzintensität: ${Math.round(SF['gcs'].points)}` : ''})<br>`;
-    element.innerHTML += `Klinische Interpretation: <b>${degreeInterpretation(degree)}</b>`;
-  }*/
   for (const element of severePatientWarnings) {
     if (degree >= 3 || SF['phq'] >= 3) {
       let html = `<div class="text-danger">`
@@ -1824,43 +1081,12 @@ function requiredchecksExtractValues(inputString) {
 /*                                  DIAGNOSIS                      
 */
 
-const diagnosisButton = document.getElementById("diagnosis-button");
-
-const diagnosisTabs = document.getElementsByClassName("diagnosis-tab");
-
 const diagnosisTabsRight = document.getElementsByClassName("diagnosis-tab-right");
 
 const diagnosisTabsLeft = document.getElementsByClassName("diagnosis-tab-left");
 
 
-diagnosisButton.addEventListener('click', () => {
-
-  // enable generate report button
-  generateReportButton.removeAttribute("disabled");
-
-  getDiagnosis();
-
-  // update UI appearence of diagnosis button
-  //diagnosisButton.className = "btn btn-success"
-
-  // show diagnosis headlines
-  const diagnosisHeadlines = document.getElementsByClassName("diagnosis-tab-headline");
-  for (const diagnosisHeadline of diagnosisHeadlines) {
-    diagnosisHeadline.style.display = "block";
-  }
-  // show anamnese tabs
-  const anamneseTabs = document.getElementsByClassName("diagnosis-tab-anamnese");
-  for (const anamneseTab of anamneseTabs) {
-    anamneseTab.style.display = "block";
-  }
-  // show diagnosis tabs (2 and 3 only, anamnese first for the first one)
-  // diagnosisTabs is a global variable, will be changed later
-  for (let i = 0; i < diagnosisTabs.length; i++) {
-    diagnosisTabs[i].style.display = "block";
-  }
-});
-
-
+/* ------------------------------------------------------------------------------------*/
 
 function getExaminationDataSide(examinationFormData, side) {
   // get left or right side of the examination form data (and neutral data)
