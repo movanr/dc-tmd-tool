@@ -1,10 +1,10 @@
 @media print {
-  .noPrint {
-    display:none;
+  .no-print {
+    display: none;
   }
 
-  #patientForm {
-    zoom:50%;
+  #patient-form {
+    zoom: 50%;
   }
 
   #examination {
@@ -19,28 +19,28 @@
 }
 
 body {
-  overflow-y:scroll;
+  overflow-y: scroll;
 }
 
 .invis {
   display: none;
 }
 
-.examination-page-2{
+.examination-page-2 {
   display: none;
 }
 
 
 .symptom {
-    /* Hide all symptoms by default */
-    display: none;
-    /*padding-top: 15px;*/
+  /* Hide all symptoms by default */
+  display: none;
+  /*padding-top: 15px;*/
 }
 
 
 
 .custom-warning {
-  display:none;
+  display: none;
 }
 
 .custom-info {
@@ -54,7 +54,7 @@ body {
   min-width: 8cm;
 }
 
-#patientForm {
+#patient-form {
   margin: auto;
   max-width: 32cm;
   min-width: 8cm;
@@ -71,5 +71,3 @@ body {
   margin: auto;
   width: 34cm;
 }
-
-

@@ -1,37 +1,9 @@
 
-/*
-class ExaminationTableFrame extends HTMLElement {
-  // Container with two rows: headline and content
-  connectedCallback() {
-    // headline is given as attribute
-    const headline = this.hasAttribute("headline") 
-      ? this.getAttribute("headline")
-      : "HEADLINE";
-    // content is given as innerHTML 
-    this.innerHTML = `
-      <div class="container mb-3 px-0 border border-secondary">
-        <div class="row">
-          <div class="col">
-            <div class="text-light text-center bg-secondary mb-2 border-bottom border-secondary">
-              <b>${headline}</b>
-            </div>
-          </div>
-        </div>
-        <div class="row px-1">
-          <div class="col">
-            ${this.innerHTML}
-          </div>
-        </div>
-      </div>
-    `
-  }
-}
-*/
 class ExaminationTableFrame extends HTMLElement {
 
   connectedCallback() {
     // headline is given as attribute
-    const headline = this.hasAttribute("headline") 
+    const headline = this.hasAttribute("headline")
       ? this.getAttribute("headline")
       : "HEADLINE";
     const id = this.hasAttribute("id")
@@ -63,12 +35,12 @@ customElements.define('examination-table-frame', ExaminationTableFrame);
 
 
 class ExaminationTableContent extends HTMLElement {
-  
+
   // Standard "Ja/Nein" table content
   connectedCallback() {
     // get first column label if exists
     const firstColLabel = this.hasAttribute("first-col-label")
-      ? this.getAttribute("first-col-label") 
+      ? this.getAttribute("first-col-label")
       : "";
     // get first column witdh modifier (in case of long row labels)
     const firstColWidth = this.hasAttribute("first-col")
@@ -80,11 +52,11 @@ class ExaminationTableContent extends HTMLElement {
     var headersHTML = `<div class="col${firstColWidth} text-center"><b>${firstColLabel}</b></div>`;
     // initialize "Ja/Nein" labels (first column is empty)
     var headerLabelsHTML = `<div class="col${firstColWidth}"></div>`;
-    for(const header of headers) {
+    for (const header of headers) {
       // add header columns to the header row
       headersHTML += `<div class="col">${header.innerHTML}</div>\n`;
-    } 
-    for(let i = 0; i < headers.length; i++) {
+    }
+    for (let i = 0; i < headers.length; i++) {
       // add header label columns to the header labels row
       headerLabelsHTML += `
         <div class="col">
@@ -107,14 +79,14 @@ class ExaminationTableContent extends HTMLElement {
     // get header count
     const headerCount = headers.length;
     // get the names of the rows from the HTML document
-    const rowLabels = this.getElementsByClassName("ex-table-row");  
+    const rowLabels = this.getElementsByClassName("ex-table-row");
     var overallRowHTML = '';
     // initialize row with overall 'Nein' button
     overallRowHTML += '<div class="row mb-2 px-2">';
     // label
     overallRowHTML += `<div class="col${firstColWidth}">Alle</div>\n`;
-    for(let j = 0; j < headerCount; j++) {
-      overallRowHTML +=  `
+    for (let j = 0; j < headerCount; j++) {
+      overallRowHTML += `
           <div class="col">
             <div class="row gx-2">
               <div class="col">
@@ -128,22 +100,22 @@ class ExaminationTableContent extends HTMLElement {
     }
     overallRowHTML += '</div>'
     var rowsHTML = ''
-    for(let i = 0; i < rowLabels.length; i++) {
+    for (let i = 0; i < rowLabels.length; i++) {
       // start row
-      rowsHTML += `<div class="row mb-2 px-2">`;      
+      rowsHTML += `<div class="row mb-2 px-2">`;
       // row label
       rowsHTML += `<div class="col${firstColWidth}">${rowLabels[i].innerHTML}</div>\n`;
-      for(let j = 0; j < headerCount; j++) {
-        if(rowLabels[i].hasAttribute("skip")) {
+      for (let j = 0; j < headerCount; j++) {
+        if (rowLabels[i].hasAttribute("skip")) {
           // check if this header should be skipped
-          if(rowLabels[i].getAttribute("skip").includes(j)) {
+          if (rowLabels[i].getAttribute("skip").includes(j)) {
             // insert empty collumn
             rowsHTML += `<div class="col"></div>`
             continue;
           }
         }
         // row content (radio buttons for "Ja/Nein")
-        rowsHTML +=  `
+        rowsHTML += `
           <div class="col">
             <div class="row gx-2">
               <div class="col">
@@ -159,7 +131,7 @@ class ExaminationTableContent extends HTMLElement {
       // end row
       rowsHTML += `</div>`
     }
-    this.innerHTML = 
+    this.innerHTML =
       // combine the header row and the header "Ja/Nein" labels row
       `
         <div class="row mb-1 px-2">
@@ -182,39 +154,11 @@ customElements.define('examination-table-content', ExaminationTableContent);
 
 
 
-
-/*class DiagnosisFrame extends HTMLElement {
-  // Container with two rows: headline and content
-  connectedCallback() {
-    // headline is given as attribute
-    const headline = this.hasAttribute("headline") 
-      ? this.getAttribute("headline")
-      : "HEADLINE";
-    // content is given as innerHTML 
-    this.innerHTML = `
-      <div class="container px-0 bg-body-secondary">
-        <div class="row">
-          <div class="col">
-            <div class="text-light text-center bg-secondary border border-secondary">
-              <b>${headline}</b>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            ${this.innerHTML}
-          </div>
-        </div>
-      </div>
-    `
-  }
-}*/
-
 class DiagnosisFrame extends HTMLElement {
   // Container with two rows: headline and content
   connectedCallback() {
     // headline is given as attribute
-    const headline = this.hasAttribute("headline") 
+    const headline = this.hasAttribute("headline")
       ? this.getAttribute("headline")
       : "HEADLINE";
     // content is given as innerHTML 

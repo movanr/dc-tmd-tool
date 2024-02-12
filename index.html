@@ -5,15 +5,6 @@
   <title>DC/TMD-Untersuchung Prototyp</title>
   <link rel="stylesheet" type="text/css" href="style.css">
 
-  <!-- docx lib for word documents -->
-  <script src="https://unpkg.com/docx@8.0.2/build/index.js"></script>
-
-  <!-- FileSaver lib for downloading files -->
-  <!--
-    Copyright 2016 Eli Grey.
-    Licensed under MIT (https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md)
-    -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js"></script>
   <!-- bootstrap lib -->
   <!-- 
     Bootstrap v5.3.0 (https://getbootstrap.com/)
@@ -26,7 +17,7 @@
 </head>
 
 <body>
-  <div class="noPrint">
+  <div class="no-print">
     <nav class="navbar navbar-expand-lg bg-body-secondary" id="navbar_top">
       <div class="container-fluid">
 
@@ -105,8 +96,8 @@
 
 
 
-  <div class="container-fixed pt-5" id="patientForm">
-   
+  <div class="container-fixed pt-5" id="patient-form">
+
     <div class="mb-4 text-center text-secondary summary-anamnesis" style="display: none;">
       <h4>Resultate der Anamnese</h4>
     </div>
@@ -122,15 +113,6 @@
         </div>
       </div>
     </div>
-
-    <!-- anamnesis submit button/ next button -->
-    <!-- <div class="container-fixed noPrint mx-0 px-0 mb-5 anamnesis-submit-button-div">
-      <div class="d-grid gap-2">
-        <button class="btn btn-primary anamnesis-submit-button" type="button">
-          <strong>Weiter zur Untersuchung</strong>
-        </button>
-      </div>
-    </div> -->
 
     <!-- 1. FRAGEBOGEN -->
     <div class="text-center text-secondary anamnese-headline mb-3" id="anam-headline-1">
@@ -785,7 +767,8 @@
       <div class="row">
         <div class="col-9">
           Wie stark haben Ihre Gesichtsschmerzen Sie in den <u>LETZTEN 30 TAGEN</u> bei Ihren <b>ÜBLICHEN
-            AKTIVITÄTEN</b> wie Arbeit, Schule oder Hausarbeit abgehalten? Verwenden Sie eine Skala von 0 bis 10, bei der 0 „keine Beeinträchtigung“
+            AKTIVITÄTEN</b> wie Arbeit, Schule oder Hausarbeit abgehalten? Verwenden Sie eine Skala von 0 bis 10, bei
+          der 0 „keine Beeinträchtigung“
           und 10
           „unfähig, irgendeine Tätigkeit auszuüben“ bedeutet.
         </div>
@@ -891,7 +874,7 @@
     </form>
 
     <!-- anamnesis submit button/ next button -->
-    <div class="container-fixed mx-0 px-0 mt-5 mb-5 noPrint anamnesis-submit-button-div">
+    <div class="container-fixed mx-0 px-0 mt-5 mb-5 no-print anamnesis-submit-button-div">
       <div class="d-grid gap-2">
         <button class="btn btn-primary anamnesis-submit-button" type="button">
           <strong>Weiter zur Untersuchung</strong>
@@ -1485,7 +1468,7 @@
               <div class="col"></div>
             </div>
           </div>
-         
+
           <div class="container-fixed">
             <div class="row">
               <div class="col radio-table">
@@ -1840,11 +1823,12 @@
           </div>
         </form>
       </div>
-      <div class="container-fixed mb-4 noPrint">
-        
+      <div class="container-fixed mb-4 no-print">
+
         <div class="container-fixed mb-3 examination-input-invalid-warning" style="display: none">
           <div class="shadow-sm p-3 bg-warning-subtle border border-warning rounded text-center">
-            Fehlende Angaben, die zu besseren Diagnosevorschlägen führen können, wurden hervorgehoben. Zum Fortfahren erneut auf Weiter klicken.
+            Fehlende Angaben, die zu besseren Diagnosevorschlägen führen können, wurden hervorgehoben. Zum Fortfahren
+            erneut auf Weiter klicken.
           </div>
         </div>
 
@@ -1866,7 +1850,7 @@
       <!-- Schmerzbezogene CMD-Diagnosen und Kopfschmerzen -->
       <div class="text-center text-secondary container-fixed mb-4 diagnosis-tab-headline">
         <h4>Schmerzbezogene CMD-Diagnosen und Kopfschmerzen</h4>
-      </div> 
+      </div>
 
       <div class="container-fixed mb-4">
 

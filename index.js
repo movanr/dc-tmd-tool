@@ -34,7 +34,7 @@ const tabButton3 = document.getElementById("tab-button-3");
 const printButton = document.getElementById('print-button');
 
 /* ------------------------------------------------------------------------------------*/
-/* diagnosis data */ 
+/* diagnosis data */
 
 const diagnosisData = {
   painBasedAnamnesis: {
@@ -110,7 +110,7 @@ function tabButton1Event() {
   tabButton3.className = tabButton3.className.replace("active", '');
 
   // functionality 
-  document.getElementById("patientForm").style.display = "block";
+  document.getElementById("patient-form").style.display = "block";
   document.getElementById("examination").style.display = "none";
   document.getElementById("diagnosis").style.display = "none";
   document.getElementById("navbar-dropdown2").style.display = "none";
@@ -126,7 +126,7 @@ function tabButton2Event() {
   tabButton3.className = tabButton3.className.replace("active", '');
 
   // functionality 
-  document.getElementById("patientForm").style.display = "none";
+  document.getElementById("patient-form").style.display = "none";
   document.getElementById("examination").style.display = "block";
   document.getElementById("diagnosis").style.display = "none";
   document.getElementById("navbar-dropdown2").style.display = "none";
@@ -142,7 +142,7 @@ function tabButton3Event() {
   }
 
   // functionality
-  document.getElementById("patientForm").style.display = "none";
+  document.getElementById("patient-form").style.display = "none";
   document.getElementById("examination").style.display = "none";
   document.getElementById("diagnosis").style.display = "block";
   document.getElementById("navbar-dropdown2").style.display = "block";
@@ -217,7 +217,7 @@ function setPatientFormDataFromInput() {
 
 
 function disableInputFields() {
-  const patientFormElement = document.getElementById("patientForm");
+  const patientFormElement = document.getElementById("patient-form");
   const inputElements = patientFormElement.getElementsByTagName("input");
   const selectElements = patientFormElement.getElementsByTagName("select");
   for (const inputElement of inputElements) {
@@ -419,17 +419,17 @@ for (const key in tableRadioColumns) {
   const radioCol = tableRadioColumns[key].col;
   for (const radio of radioCol) {
     radio.addEventListener('change', () => {
-      
+
       const id = radio.id;
-      for(const key in radioTables) {
-        if(id.includes(key)) {
+      for (const key in radioTables) {
+        if (id.includes(key)) {
           const table = radioTables[key];
-          if(isTableValid(table)) {
+          if (isTableValid(table)) {
             const bg = table.frameBg;
-            if(bg.classList.contains('bg-info-subtle')) {
+            if (bg.classList.contains('bg-info-subtle')) {
               bg.classList.replace('bg-info-subtle', 'bg-success-subtle')
             }
-            if(bg.classList.contains('bg-warning-subtle')) {
+            if (bg.classList.contains('bg-warning-subtle')) {
               bg.classList.replace('bg-warning-subtle', 'bg-success-subtle');
             }
             table.customInfo.style.display = "none";
@@ -437,11 +437,11 @@ for (const key in tableRadioColumns) {
           }
         }
       }
-      if(currentExaminationStep == 3) {
+      if (currentExaminationStep == 3) {
         let isValid = validateExaminationSubmit()
-        if(isValid) {
+        if (isValid) {
           const components = document.getElementsByClassName("examination-input-invalid-warning");
-          for(const component of components) {
+          for (const component of components) {
             component.style.display = "none";
           }
         }
@@ -575,13 +575,13 @@ examinationNextButton.addEventListener('click', () => {
     if (isValidPage1) {
       validatePreExaminationSubmit(); // show next examination steps
       examinationNextButton.innerHTML = "Diagnosevorschläge nach DC/TMD-Kriterien erstellen"; // change button text
-      currentExaminationStep++;     
+      currentExaminationStep++;
       for (const elemt of examinationPage2) {
         elemt.style.display = "block";
       }
     }
   }
-  
+
   // step 2 of the examination process
   else if (currentExaminationStep == 2) {
     // check if examination is valid
@@ -609,7 +609,7 @@ examinationNextButton.addEventListener('click', () => {
     }
   }
   // if the second examination step is not valid the second time, then proceed anyway
-  else if(currentExaminationStep == 3) {
+  else if (currentExaminationStep == 3) {
     tabButton3Event();
     getDiagnosis();
     tabButton3.classList.remove("disabled");
@@ -664,10 +664,10 @@ function validatePreExaminationSubmit() {
 
 function validateExaminationSubmit() {
   let isValid = true;
-  if(!validateExaminationSubmitSide('L')) {
+  if (!validateExaminationSubmitSide('L')) {
     isValid = false;
   }
-  if(!validateExaminationSubmitSide('R')) {
+  if (!validateExaminationSubmitSide('R')) {
     isValid = false;
   }
   return isValid
@@ -704,7 +704,7 @@ function validatePreExaminationSubmitSide(SF, U, side) {
         table.customInfo.style.display = 'block';
       }
     }
-    if (!U['1a'][0] || !U['1b'][0]) { // wenn schmerzen vorhandengit 
+    if (!U['1a'][0] || !U['1b'][0]) { // wenn schmerzen vorhanden
       if ((tableId.includes('6') || tableId.includes('7'))) {
         setFrameBg(table.frameBg, 'bg-info-subtle');
         table.customInfo.style.display = 'block';
@@ -722,12 +722,12 @@ function validateExaminationSubmitSide(side) {
       continue;
     }
 
-    if(table.frameBg.classList.contains("bg-info-subtle") || table.frameBg.classList.contains("bg-warning-subtle")) {
+    if (table.frameBg.classList.contains("bg-info-subtle") || table.frameBg.classList.contains("bg-warning-subtle")) {
       const tableIdSubstr = tableId.substring(0, 1);
       for (const component of customNumberInputComponents) {
         const inputs = component.querySelectorAll('input[type=number]')
         for (const input of inputs) {
-          if(input.id.includes(tableIdSubstr)) {
+          if (input.id.includes(tableIdSubstr)) {
             if (input.value === "") {
               addCustomInputWarning(component);
               isValid = false;
@@ -749,16 +749,16 @@ function validateExaminationSubmitSide(side) {
       }
     }
   }
-  
+
   return isValid;
 }
 
 function isTableValid(table) {
   const content = table.content;
   let isValid = true;
-  for(let i = 0; i < content.length; i++) {
-    for(let j = 0; j < content[i].length - 1; j += 2) {
-      if(!content[i][j].checked && !content[i][j+1].checked) {
+  for (let i = 0; i < content.length; i++) {
+    for (let j = 0; j < content[i].length - 1; j += 2) {
+      if (!content[i][j].checked && !content[i][j + 1].checked) {
         isValid = false;
       }
     }
@@ -1412,131 +1412,6 @@ function getGCS(patientFormData) {
 function getDiagnosis() {
   setPatientFormDataFromInput();
   patientRecordLocal['examinationFormData'] = getExaminationFormData();
-
-
-  /*const SF = {
-    '1': true,
-    '2': {
-      years: 1,
-      months: 4,
-    },
-    '3': true,
-    '4': {
-      A: false,
-      B: true,
-      C: false,
-      D: false,
-    },
-    '5': false,
-    '6': {
-      years: 1,
-      months: 1,
-    },
-    '7': {
-      A: false,
-      B: false,
-      C: false,
-      D: false,
-    },
-    '8': false,
-    '9': false,
-    '10': false,
-    '11': false,
-    '12': false,
-    '13': false,
-    '14': false,
-  };*/
-  /*
-    const U = {
-      '1a': [false, true, true, true, true, false],
-      '1b': [false , true, false],
-      '2': {
-        'ref': 21,
-        'horizontal': 5,
-        'vertical': 9,
-        'center_dev': 2,
-        'side': 'L',
-      },
-      '3': 1,
-      '4': {
-        A: {
-          'opening': 40,
-        },
-        B: {
-          'opening': 45,
-          'T': [false, false, false],
-          'M': [false, false],
-          'K': [true, true],
-          'A': [true, false],
-          'N': [false, false],
-        },
-        C: {
-          'opening': 50,
-          'T': [false, false, false],
-          'M': [false, false],
-          'K': [false, false],
-          'A': [false, false],
-          'N': [false, false],
-        },
-        D: false,
-      },
-      '5': {
-        A: {
-          'latR': 5,
-          'T': [false, false, false],
-          'M': [false, false],
-          'K': [false, false],
-          'A': [false, false],
-          'N': [false, false],
-        },
-        B: {
-          'latL': 3,
-          'T': [false, false, false],
-          'M': [false, false],
-          'K': [false, false],
-          'A': [false, false],
-          'N': [false, false],
-        },
-        C: {
-          'protr': 2,
-          'T': [false, false, false],
-          'M': [false, false],
-          'K': [false, false],
-          'A': [false, false],
-          'N': [false, false],
-        },
-      },
-      '6': {
-        'K': [true, false, false, false, false],
-        'R': [false, false, false],
-      },
-      '7': {
-        'K': [true, false, false, false],
-        'R': [true, false]
-      },
-      '8': {
-        'W': [true, false, false],
-        'B': [true, false, false],
-      },
-      '9': {
-        'Tp': [false, true, false, false],
-        'Tm': [false, true, true, false],
-        'Ta': [false, false, false, false],
-        'MU': [false, false, false, false],
-        'MK': [false, false, false, false],
-        'MA': [false, false, false, false],
-        'LP': [false, false, false],
-        'ULP': [false, false, false],
-      },
-      '10': {
-        'Rs': [false, false, false],
-        'Rr': [false, false, false],
-        'BM': [false, false, false],
-        'T': [false, false, false],
-      } 
-  
-      
-    };*/
 
   const SF = getSF(patientRecordLocal.patientFormData);
   phqTotalValueField.innerHTML = SF.phq;
